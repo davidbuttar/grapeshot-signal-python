@@ -1,0 +1,22 @@
+{
+  "url": "http://bbc.com/",
+  "status": "queued",
+  "_links": {
+    "self": {
+      "href": "/v1/pages?url=http%3A%2F%2Fbbc.com%2F"
+    },
+    "curies": [
+      {
+        "name": "grapeshot",
+        "href": "/rels/grapeshot/{rel}",
+        "templated": true
+      }
+    ],
+    "grapeshot:keywords": {
+      "href": "/v1/keywords?url=http%3A%2F%2Fbbc.com%2F"
+    },
+    "grapeshot:segments": {
+      "href": "/v1/segments?url=http%3A%2F%2Fbbc.com%2F"
+    }
+  }
+}

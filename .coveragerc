@@ -1,0 +1,8 @@
+[run]
+omit =
+     */env/*
+     */venv/*
+     tests/*
+
+[report]
+     show_missing=True

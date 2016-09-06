@@ -1,0 +1,345 @@
+{
+  "_links": {
+    "self": {
+      "href": "/v1/pages?url=http%3A%2F%2Fbbc.com%2F"
+    },
+    "curies": [
+      {
+        "name": "grapeshot",
+        "href": "/rels/grapeshot/{rel}",
+        "templated": true
+      }
+    ],
+    "grapeshot:keywords": {
+      "href": "/v1/keywords?url=http%3A%2F%2Fbbc.com%2F"
+    },
+    "grapeshot:segments": {
+      "href": "/v1/segments?url=http%3A%2F%2Fbbc.com%2F"
+    }
+  },
+  "url": "http://bbc.com/",
+  "status": "ok",
+  "language": "en",
+  "_embedded": {
+    "grapeshot:keywords": {
+      "_links": {
+        "self": {
+          "href": "/v1/keywords?url=http%3A%2F%2Fbbc.com%2F"
+        },
+        "grapeshot:page": {
+          "href": "/v1/pages?url=http%3A%2F%2Fbbc.com%2F"
+        },
+        "grapeshot:segments": {
+          "href": "/v1/segments?url=http%3A%2F%2Fbbc.com%2F"
+        }
+      },
+      "url": "http://bbc.com/",
+      "status": "ok",
+      "language": "en",
+      "keywords": [
+        {
+          "name": "The BBC",
+          "score": 2.632
+        },
+        {
+          "name": "Apple",
+          "score": 1.765
+        },
+        {
+          "name": "Breaking news",
+          "score": 1.25
+        },
+        {
+          "name": "Broadcasting",
+          "score": 1.25
+        },
+        {
+          "name": "Corporation",
+          "score": 1.25
+        },
+        {
+          "name": "educates",
+          "score": 1.25
+        },
+        {
+          "name": "EU",
+          "score": 1.25
+        },
+        {
+          "name": "immigration",
+          "score": 1.25
+        },
+        {
+          "name": "iPhone",
+          "score": 1.25
+        },
+        {
+          "name": "iPlayer",
+          "score": 1.25
+        },
+        {
+          "name": "racist",
+          "score": 1.25
+        },
+        {
+          "name": "radio",
+          "score": 1.25
+        },
+        {
+          "name": "Silicon Valley's",
+          "score": 1.25
+        },
+        {
+          "name": "sport",
+          "score": 1.25
+        },
+        {
+          "name": "tourist",
+          "score": 1.25
+        },
+        {
+          "name": "Trump",
+          "score": 1.25
+        },
+        {
+          "name": "TV",
+          "score": 1.25
+        },
+        {
+          "name": "US election",
+          "score": 1.25
+        }
+      ]
+    },
+    "grapeshot:segments": {
+      "_links": {
+        "self": {
+          "href": "/v1/segments?url=http%3A%2F%2Fbbc.com%2F"
+        },
+        "grapeshot:page": {
+          "href": "/v1/pages?url=http%3A%2F%2Fbbc.com%2F"
+        },
+        "grapeshot:keywords": {
+          "href": "/v1/keywords?url=http%3A%2F%2Fbbc.com%2F"
+        }
+      },
+      "url": "http://bbc.com/",
+      "status": "ok",
+      "language": "en",
+      "segments": [
+        {
+          "name": "gs_entertain",
+          "score": 25.716,
+          "matchterms": [
+            {
+              "name": "BBC",
+              "score": 2.632
+            },
+            {
+              "name": "Broadcasting",
+              "score": 1.25
+            },
+            {
+              "name": "iPlayer",
+              "score": 1.25
+            },
+            {
+              "name": "radio",
+              "score": 1.25
+            },
+            {
+              "name": "The BBC",
+              "score": 1.25
+            },
+            {
+              "name": "TV",
+              "score": 1.25
+            }
+          ]
+        },
+        {
+          "name": "gs_entertain_tv",
+          "score": 23.372,
+          "matchterms": [
+            {
+              "name": "BBC",
+              "score": 2.632
+            },
+            {
+              "name": "Broadcasting",
+              "score": 1.25
+            },
+            {
+              "name": "iPlayer",
+              "score": 1.25
+            },
+            {
+              "name": "The BBC",
+              "score": 1.25
+            },
+            {
+              "name": "TV",
+              "score": 1.25
+            }
+          ]
+        },
+        {
+          "name": "gs_politics",
+          "score": 18.471,
+          "matchterms": [
+            {
+              "name": "election",
+              "score": 1.25
+            },
+            {
+              "name": "EU",
+              "score": 1.25
+            },
+            {
+              "name": "immigration",
+              "score": 1.25
+            },
+            {
+              "name": "Trump",
+              "score": 1.25
+            },
+            {
+              "name": "US election",
+              "score": 1.25
+            }
+          ]
+        },
+        {
+          "name": "gs_interest_frequent_travelers",
+          "score": 17.635,
+          "matchterms": [
+            {
+              "name": "Breaking news",
+              "score": 1.25
+            },
+            {
+              "name": "Corporation",
+              "score": 1.25
+            },
+            {
+              "name": "iPhone",
+              "score": 1.25
+            },
+            {
+              "name": "sport",
+              "score": 1.25
+            },
+            {
+              "name": "tourist",
+              "score": 1.25
+            }
+          ]
+        },
+        {
+          "name": "gs_interest_male",
+          "score": 12.323,
+          "matchterms": [
+            {
+              "name": "Apple",
+              "score": 1.765
+            },
+            {
+              "name": "Silicon Valley's",
+              "score": 1.25
+            },
+            {
+              "name": "sport",
+              "score": 1.25
+            }
+          ]
+        },
+        {
+          "name": "gs_politics_misc",
+          "score": 11.529,
+          "matchterms": [
+            {
+              "name": "election",
+              "score": 1.25
+            },
+            {
+              "name": "EU",
+              "score": 1.25
+            },
+            {
+              "name": "immigration",
+              "score": 1.25
+            }
+          ]
+        },
+        {
+          "name": "gs_tech_computing",
+          "score": 9.848,
+          "matchterms": [
+            {
+              "name": "Apple",
+              "score": 1.765
+            },
+            {
+              "name": "Silicon Valley's",
+              "score": 1.25
+            }
+          ]
+        },
+        {
+          "name": "gs_politics_american",
+          "score": 7.915,
+          "matchterms": [
+            {
+              "name": "Trump",
+              "score": 1.25
+            },
+            {
+              "name": "US election",
+              "score": 1.25
+            }
+          ]
+        },
+        {
+          "name": "gv_hatespeech",
+          "score": 4.38,
+          "matchterms": [
+            {
+              "name": "racist",
+              "score": 1.25
+            }
+          ]
+        },
+        {
+          "name": "gs_business_misc",
+          "score": 4.348,
+          "matchterms": [
+            {
+              "name": "Corporation",
+              "score": 1.25
+            }
+          ]
+        },
+        {
+          "name": "gs_business",
+          "score": 4.13,
+          "matchterms": [
+            {
+              "name": "Corporation",
+              "score": 1.25
+            }
+          ]
+        },
+        {
+          "name": "gs_interest_online_shoppers",
+          "score": 3.484,
+          "matchterms": [
+            {
+              "name": "iPhone",
+              "score": 1.25
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

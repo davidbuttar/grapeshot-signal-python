@@ -1,0 +1,16 @@
+{
+  "error": "Bad Request",
+  "message": "Request parameter validation failed",
+  "code": 400,
+  "errors": [
+    {
+      "field": "url",
+      "message": "\"url\" must be a valid uri with a scheme matching the http|https pattern"
+    }
+  ],
+  "_links": {
+    "about": {
+      "href": "https://en.wikipedia.org/wiki/HTTP_400"
+    }
+  }
+}

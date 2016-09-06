@@ -1,0 +1,11 @@
+{
+  "url": "http://bbc.com/not_found",
+  "status": "error",
+  "error_code": "gx_error",
+  "error_message": "The page cannot be analyzed",
+  "_links": {
+    "self": {
+      "href": "/v1/pages?url=http%3A%2F%2Fbbc.com%2Fnot_found"
+    }
+  }
+}
