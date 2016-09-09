@@ -125,3 +125,7 @@ class TestClient(unittest.TestCase):
             except APIError as err:
                 self.assertIsNotNone(err)
                 self.assertEqual(err.status_code(), 500)
+
+if __name__ == '__main__':
+    unittest.main()
+
