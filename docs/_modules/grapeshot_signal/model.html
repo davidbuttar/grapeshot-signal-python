@@ -1,0 +1,174 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>grapeshot_signal.model &#8212; Grapeshot Signal SDK 0.1 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="top" title="Grapeshot Signal SDK 0.1 documentation" href="../../index.html" />
+    <link rel="up" title="Module code" href="../index.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for grapeshot_signal.model</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">grapeshot_signal.config</span> <span class="k">as</span> <span class="nn">config</span>
+<span class="kn">from</span> <span class="nn">.errors</span> <span class="k">import</span> <span class="n">OverQuotaError</span>
+
+
+<div class="viewcode-block" id="SignalStatus"><a class="viewcode-back" href="../../reference.html#grapeshot_signal.model.SignalStatus">[docs]</a><span class="k">class</span> <span class="nc">SignalStatus</span><span class="p">:</span>
+    <span class="n">ok</span> <span class="o">=</span> <span class="s1">&#39;ok&#39;</span>
+    <span class="n">queued</span> <span class="o">=</span> <span class="s1">&#39;queued&#39;</span>
+    <span class="n">error</span> <span class="o">=</span> <span class="s1">&#39;error&#39;</span>
+    <span class="n">over_quota</span> <span class="o">=</span> <span class="s1">&#39;over_quota&#39;</span></div>
+
+
+<div class="viewcode-block" id="SignalModel"><a class="viewcode-back" href="../../reference.html#grapeshot_signal.model.SignalModel">[docs]</a><span class="k">class</span> <span class="nc">SignalModel</span><span class="p">(</span><span class="nb">dict</span><span class="p">):</span>
+
+<div class="viewcode-block" id="SignalModel.is_ok"><a class="viewcode-back" href="../../reference.html#grapeshot_signal.model.SignalModel.is_ok">[docs]</a>    <span class="k">def</span> <span class="nf">is_ok</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns True if ok status</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;status&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">SignalStatus</span><span class="o">.</span><span class="n">ok</span></div>
+
+<div class="viewcode-block" id="SignalModel.is_queued"><a class="viewcode-back" href="../../reference.html#grapeshot_signal.model.SignalModel.is_queued">[docs]</a>    <span class="k">def</span> <span class="nf">is_queued</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns True if queued status</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;status&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">SignalStatus</span><span class="o">.</span><span class="n">queued</span></div>
+
+<div class="viewcode-block" id="SignalModel.is_error"><a class="viewcode-back" href="../../reference.html#grapeshot_signal.model.SignalModel.is_error">[docs]</a>    <span class="k">def</span> <span class="nf">is_error</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns True if error status</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;status&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">SignalStatus</span><span class="o">.</span><span class="n">error</span></div>
+
+<div class="viewcode-block" id="SignalModel.is_over_quota"><a class="viewcode-back" href="../../reference.html#grapeshot_signal.model.SignalModel.is_over_quota">[docs]</a>    <span class="k">def</span> <span class="nf">is_over_quota</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns true if over_quota status</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;status&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">SignalStatus</span><span class="o">.</span><span class="n">over_quota</span></div>
+
+    <span class="k">def</span> <span class="nf">url</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;url&#39;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="SignalModel.get_link_href"><a class="viewcode-back" href="../../reference.html#grapeshot_signal.model.SignalModel.get_link_href">[docs]</a>    <span class="k">def</span> <span class="nf">get_link_href</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">link_relation</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return the link href for a link relation.</span>
+<span class="sd">        &#39;link_relation&#39; the link relation for which href is required.</span>
+<span class="sd">        See rels.py.</span>
+
+<span class="sd">        Returns None if the link does not exist.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="n">link_relation</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+
+        <span class="n">result</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="n">link</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;_links&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">link_relation</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">link</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">link</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;href&#39;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">result</span></div>
+
+<div class="viewcode-block" id="SignalModel.get_embedded"><a class="viewcode-back" href="../../reference.html#grapeshot_signal.model.SignalModel.get_embedded">[docs]</a>    <span class="k">def</span> <span class="nf">get_embedded</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">link_relation</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return the embedded model for link_relation.</span>
+<span class="sd">        The returned object can be treated as a model in its own right.</span>
+
+<span class="sd">        The link relation of the embedded object must have been specified</span>
+<span class="sd">        when the model was originally requested. May not be None.</span>
+<span class="sd">        &#39;link_relation&#39; the link relation for which href is required. May</span>
+<span class="sd">        not be None.</span>
+
+<span class="sd">        Returns None if the embedded object does not exist.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">assert</span> <span class="n">link_relation</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+
+        <span class="n">result</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="n">embedded_object</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;_embedded&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">embedded_object</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">embedded_object</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">link_relation</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">result</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">raise_over_quota</span> <span class="ow">and</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;status&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">SignalStatus</span><span class="o">.</span><span class="n">over_quota</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="n">OverQuotaError</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+
+                <span class="n">result</span> <span class="o">=</span> <span class="n">SignalModel</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">result</span></div></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, Grapeshot Limited.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.8</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.9</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

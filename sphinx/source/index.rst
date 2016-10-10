@@ -11,9 +11,11 @@ Contents:
 .. toctree::
    :maxdepth: 2
 
-   intro
-   tutorial
 
+   intro
+   quickstart
+   tutorial
+   reference
 
 Indices and tables
 ==================
