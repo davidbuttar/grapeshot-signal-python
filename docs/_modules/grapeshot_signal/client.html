@@ -1,0 +1,230 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>grapeshot_signal.client &#8212; Grapeshot Signal SDK 0.1 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="top" title="Grapeshot Signal SDK 0.1 documentation" href="../../index.html" />
+    <link rel="up" title="Module code" href="../index.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for grapeshot_signal.client</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">requests</span>
+<span class="kn">import</span> <span class="nn">platform</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">urllib.parse</span> <span class="k">import</span> <span class="n">urljoin</span><span class="p">,</span> <span class="n">urlunparse</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
+    <span class="kn">from</span> <span class="nn">urlparse</span> <span class="k">import</span> <span class="n">urljoin</span><span class="p">,</span> <span class="n">urlunparse</span>  <span class="c1"># pragma: no cover</span>
+<span class="kn">import</span> <span class="nn">grapeshot_signal.config</span> <span class="k">as</span> <span class="nn">config</span>
+<span class="kn">from</span> <span class="nn">.model</span> <span class="k">import</span> <span class="n">SignalModel</span><span class="p">,</span> <span class="n">SignalStatus</span>
+<span class="kn">from</span> <span class="nn">.errors</span> <span class="k">import</span> <span class="n">APIError</span><span class="p">,</span> <span class="n">OverQuotaError</span>
+
+
+<div class="viewcode-block" id="SignalClient"><a class="viewcode-back" href="../../reference.html#grapeshot_signal.SignalClient">[docs]</a><span class="k">class</span> <span class="nc">SignalClient</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">api_key</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize an instance with an API key (bearer token.)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">api_key</span> <span class="o">=</span> <span class="n">api_key</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">base_url</span> <span class="o">=</span> <span class="n">urlunparse</span><span class="p">((</span><span class="s1">&#39;https&#39;</span><span class="p">,</span> <span class="n">config</span><span class="o">.</span><span class="n">api_host</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
+
+        <span class="c1"># Note that the User-agent string contains the library name, the</span>
+        <span class="c1"># libary version, and the python version. This will help us track</span>
+        <span class="c1"># what people are using, and where we should concentrate our</span>
+        <span class="c1"># development efforts.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">user_agent</span> <span class="o">=</span> <span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">sdk_name</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span> <span class="o">+</span> <span class="n">config</span><span class="o">.</span><span class="n">sdk_version</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span> <span class="o">+</span>
+                           <span class="n">platform</span><span class="o">.</span><span class="n">python_version</span><span class="p">())</span>
+
+    <span class="k">def</span> <span class="nf">_get_headers</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Private</span>
+<span class="sd">        Get all the headers we&#39;re going to need:</span>
+<span class="sd">        1. Authorization</span>
+<span class="sd">        3. User-agent</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;User-Agent&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">user_agent</span> <span class="p">}</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_key</span><span class="p">:</span>
+            <span class="n">headers</span><span class="p">[</span><span class="s1">&#39;Authorization&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Bearer &#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_key</span>
+        <span class="k">return</span> <span class="n">headers</span>
+
+    <span class="k">def</span> <span class="nf">_get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">is_full_path</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Private</span>
+<span class="sd">        Perform a GET request with headers.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            path (str): API path (partial or full)</span>
+<span class="sd">            params (dict): Query params dict</span>
+<span class="sd">            is_full_path (boolean): if false, path is appended</span>
+<span class="sd">                                    to api version prefix.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            page_model (SignalModel): model/JSON dict.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            APIError</span>
+<span class="sd">            OverQuotaError</span>
+<span class="sd">            requests.exceptions.ConnectionError</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">headers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_headers</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">is_full_path</span><span class="p">:</span>
+            <span class="n">base_url</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_url</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">base_url</span> <span class="o">=</span> <span class="n">urljoin</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base_url</span><span class="p">,</span> <span class="n">config</span><span class="o">.</span><span class="n">api_version</span><span class="p">)</span>
+
+        <span class="n">api_url</span> <span class="o">=</span> <span class="n">urljoin</span><span class="p">(</span><span class="n">base_url</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span>
+
+        <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">api_url</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="mi">200</span> <span class="o">&lt;=</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">&lt;</span> <span class="mi">299</span><span class="p">:</span>
+
+            <span class="n">data</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+
+            <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">raise_over_quota</span> <span class="ow">and</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;status&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">SignalStatus</span><span class="o">.</span><span class="n">over_quota</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">OverQuotaError</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+            <span class="k">return</span> <span class="n">SignalModel</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+            <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;message&#39;</span><span class="p">:</span> <span class="s1">&#39;Unknown server error&#39;</span><span class="p">}</span>
+
+            <span class="k">raise</span> <span class="n">APIError</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+
+<div class="viewcode-block" id="SignalClient.get_page"><a class="viewcode-back" href="../../reference.html#grapeshot_signal.SignalClient.get_page">[docs]</a>    <span class="k">def</span> <span class="nf">get_page</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">embed</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get analysis for a page (GET /v1/pages).</span>
+
+<span class="sd">        Example usage: client.get_page(&#39;http://example.org&#39;,</span>
+<span class="sd">                                       rels.segments)</span>
+
+<span class="sd">        If you specify embeds, you can access them in the result</span>
+<span class="sd">        model using utils.get_embedded(model, link_rel).</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            url (str): URL of the webpage to analyze.</span>
+<span class="sd">            embed (list of str or str): Entity relations to embed in</span>
+<span class="sd">                               response. See values in rels.py.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            page_model (SignalModel): model/JSON dict.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            APIError</span>
+<span class="sd">            OverQuotaError</span>
+<span class="sd">            requests.exceptions.ConnectionError</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;url&#39;</span><span class="p">:</span> <span class="n">url</span>
+        <span class="p">}</span>
+
+        <span class="k">if</span> <span class="n">embed</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">params</span><span class="p">[</span><span class="s1">&#39;embed&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">embed</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get</span><span class="p">(</span><span class="s1">&#39;pages&#39;</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="SignalClient.get_link"><a class="viewcode-back" href="../../reference.html#grapeshot_signal.SignalClient.get_link">[docs]</a>    <span class="k">def</span> <span class="nf">get_link</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">link_rel</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Gets the data for a link relation in a model.</span>
+<span class="sd">        For example, if you request a page and then want to get the</span>
+<span class="sd">        keywords for the page, you can call:</span>
+
+<span class="sd">        keywords_model = client.get_link(page_model, rels.keywords)</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            model (dict): a model returned from a previous API call.</span>
+<span class="sd">            link_rel (str): a link relation, see rels.py.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            page_model (SignalModel): model/JSON dict.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            APIError</span>
+<span class="sd">            OverQuotaError</span>
+<span class="sd">            requests.exceptions.ConnectionError</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">href</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">get_link_href</span><span class="p">(</span><span class="n">link_rel</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get</span><span class="p">(</span><span class="n">href</span><span class="p">,</span> <span class="n">is_full_path</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, Grapeshot Limited.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.8</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.9</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>
