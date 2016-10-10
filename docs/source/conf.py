@@ -59,7 +59,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = 'Grapeshot Signal SDK'
-copyright = '2016, Paul Rudin, Ivo Rothschild'
+copyright = '2016, Grapeshot Limited'
 author = 'Paul Rudin, Ivo Rothschild'
 
 # The version info for the project you're documenting, acts as replacement for
