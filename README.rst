@@ -8,5 +8,5 @@ https://api-portal.grapeshot.co.uk for more information.
 
 See https://grapeshot.github.io/grapeshot-signal-python/ for detailed
 documentation for this sdk.
-
+ 
 .. include:: sphinx/source/quickstart.rst
