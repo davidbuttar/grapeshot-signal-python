@@ -4,20 +4,20 @@
    contain the root `toctree` directive.
 
 .. include:: ./links.rst
-             
+
 Welcome to Grapeshot Signal SDK's documentation!
 ================================================
 
 Contents:
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 3
 
 
    intro
    quickstart
    tutorial
-   reference
+   modules
 
 Indices and tables
 ==================

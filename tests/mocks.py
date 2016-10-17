@@ -4,7 +4,8 @@ from httmock import urlmatch
 
 
 def load_file(file):
-    with open(os.path.join('.', 'tests', 'data', file), encoding="utf-8") as fp:
+    with open(os.path.join('.', 'tests', 'data', file),
+              encoding="utf-8") as fp:
         return fp.read()
 
 

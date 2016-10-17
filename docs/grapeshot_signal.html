@@ -1,0 +1,334 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>grapeshot_signal package &#8212; Grapeshot Signal SDK 0.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="top" title="Grapeshot Signal SDK 0.1 documentation" href="index.html" />
+    <link rel="up" title="grapeshot_signal" href="modules.html" />
+    <link rel="prev" title="grapeshot_signal" href="modules.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="grapeshot-signal-package">
+<h1>grapeshot_signal package<a class="headerlink" href="#grapeshot-signal-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-grapeshot_signal.client">
+<span id="grapeshot-signal-client-module"></span><h2>grapeshot_signal.client module<a class="headerlink" href="#module-grapeshot_signal.client" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="grapeshot_signal.client.SignalClient">
+<em class="property">class </em><code class="descclassname">grapeshot_signal.client.</code><code class="descname">SignalClient</code><span class="sig-paren">(</span><em>api_key</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/grapeshot_signal/client.html#SignalClient"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#grapeshot_signal.client.SignalClient" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>A wrapper for the Signal web API.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>api_key</strong> (<em>str</em>) &#8211; An API key obtained from the <a class="reference external" href="https://api-portal.grapeshot.com/">Developer Portal</a> The
+validity of the key is not checked at intialisation time, but
+invalid keys will result in errors when calling one of the get_
+methods.</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="grapeshot_signal.client.SignalClient.get_link">
+<code class="descname">get_link</code><span class="sig-paren">(</span><em>model</em>, <em>link_rel</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/grapeshot_signal/client.html#SignalClient.get_link"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#grapeshot_signal.client.SignalClient.get_link" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the data for a link relation in a model.</p>
+<p class="rubric">Example</p>
+<p>Get the keywords for the a page:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">keywords_model</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get_link</span><span class="p">(</span><span class="n">page_model</span><span class="p">,</span> <span class="n">rels</span><span class="o">.</span><span class="n">keywords</span><span class="p">)</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>model</strong> (<em>dict</em>) &#8211; a model returned from a previous API call.</li>
+<li><strong>link_rel</strong> (<em>str</em>) &#8211; a link relation, see rels.py.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>page_model</strong> &#8211; model/JSON dict.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><a class="reference internal" href="#grapeshot_signal.model.SignalModel" title="grapeshot_signal.model.SignalModel">SignalModel</a></p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
+<li><code class="xref py py-exc docutils literal"><span class="pre">APIError</span></code></li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">OverQuotaError</span></code></li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">requests.exceptions.ConnectionError</span></code></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="grapeshot_signal.client.SignalClient.get_page">
+<code class="descname">get_page</code><span class="sig-paren">(</span><em>url</em>, <em>embed=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/grapeshot_signal/client.html#SignalClient.get_page"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#grapeshot_signal.client.SignalClient.get_page" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get analysis for a page (GET /v1/pages).</p>
+<p class="rubric">Example</p>
+<p>Get the segments for a webpage:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get_page</span><span class="p">(</span><span class="s1">&#39;http://example.org&#39;</span><span class="p">,</span> <span class="n">rels</span><span class="o">.</span><span class="n">segments</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Then access the embedded segments:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">utils</span><span class="o">.</span><span class="n">get_embedded</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">rels</span><span class="o">.</span><span class="n">segments</span><span class="p">)</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>url</strong> (<em>str</em>) &#8211; URL of the webpage to analyze.</li>
+<li><strong>embed</strong> (<em>list of str or str</em>) &#8211; Entity relations to embed in
+response. See values in rels.py.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>page_model</strong> &#8211; model/JSON dict.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><a class="reference internal" href="#grapeshot_signal.model.SignalModel" title="grapeshot_signal.model.SignalModel">SignalModel</a></p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
+<li><code class="xref py py-exc docutils literal"><span class="pre">APIError</span></code></li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">OverQuotaError</span></code></li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">requests.exceptions.ConnectionError</span></code></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-grapeshot_signal.config">
+<span id="grapeshot-signal-config-module"></span><h2>grapeshot_signal.config module<a class="headerlink" href="#module-grapeshot_signal.config" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-grapeshot_signal.errors">
+<span id="grapeshot-signal-errors-module"></span><h2>grapeshot_signal.errors module<a class="headerlink" href="#module-grapeshot_signal.errors" title="Permalink to this headline">¶</a></h2>
+<dl class="exception">
+<dt id="grapeshot_signal.errors.APIError">
+<em class="property">exception </em><code class="descclassname">grapeshot_signal.errors.</code><code class="descname">APIError</code><span class="sig-paren">(</span><em>code</em>, <em>data</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/grapeshot_signal/errors.html#APIError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#grapeshot_signal.errors.APIError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">Exception</span></code></p>
+<dl class="method">
+<dt id="grapeshot_signal.errors.APIError.error">
+<code class="descname">error</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/grapeshot_signal/errors.html#APIError.error"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#grapeshot_signal.errors.APIError.error" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="grapeshot_signal.errors.APIError.errors">
+<code class="descname">errors</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/grapeshot_signal/errors.html#APIError.errors"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#grapeshot_signal.errors.APIError.errors" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="grapeshot_signal.errors.APIError.message">
+<code class="descname">message</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/grapeshot_signal/errors.html#APIError.message"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#grapeshot_signal.errors.APIError.message" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="grapeshot_signal.errors.APIError.status_code">
+<code class="descname">status_code</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/grapeshot_signal/errors.html#APIError.status_code"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#grapeshot_signal.errors.APIError.status_code" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="exception">
+<dt id="grapeshot_signal.errors.OverQuotaError">
+<em class="property">exception </em><code class="descclassname">grapeshot_signal.errors.</code><code class="descname">OverQuotaError</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/grapeshot_signal/errors.html#OverQuotaError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#grapeshot_signal.errors.OverQuotaError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">Exception</span></code></p>
+<dl class="method">
+<dt id="grapeshot_signal.errors.OverQuotaError.href">
+<code class="descname">href</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/grapeshot_signal/errors.html#OverQuotaError.href"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#grapeshot_signal.errors.OverQuotaError.href" title="Permalink to this definition">¶</a></dt>
+<dd><p>url of the endpoint which is over quota.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-grapeshot_signal.model">
+<span id="grapeshot-signal-model-module"></span><h2>grapeshot_signal.model module<a class="headerlink" href="#module-grapeshot_signal.model" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="grapeshot_signal.model.SignalModel">
+<em class="property">class </em><code class="descclassname">grapeshot_signal.model.</code><code class="descname">SignalModel</code><a class="reference internal" href="_modules/grapeshot_signal/model.html#SignalModel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#grapeshot_signal.model.SignalModel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">dict</span></code></p>
+<dl class="method">
+<dt id="grapeshot_signal.model.SignalModel.get_embedded">
+<code class="descname">get_embedded</code><span class="sig-paren">(</span><em>link_relation</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/grapeshot_signal/model.html#SignalModel.get_embedded"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#grapeshot_signal.model.SignalModel.get_embedded" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the embedded model for link_relation.
+The returned object can be treated as a model in its own right.</p>
+<p>The link relation of the embedded object must have been specified
+when the model was originally requested. May not be None.
+&#8216;link_relation&#8217; the link relation for which href is required. May
+not be None.</p>
+<p>Returns None if the embedded object does not exist.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="grapeshot_signal.model.SignalModel.get_link_href">
+<code class="descname">get_link_href</code><span class="sig-paren">(</span><em>link_relation</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/grapeshot_signal/model.html#SignalModel.get_link_href"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#grapeshot_signal.model.SignalModel.get_link_href" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the link href for a link relation.
+&#8216;link_relation&#8217; the link relation for which href is required.
+See rels.py.</p>
+<p>Returns None if the link does not exist.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="grapeshot_signal.model.SignalModel.is_error">
+<code class="descname">is_error</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/grapeshot_signal/model.html#SignalModel.is_error"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#grapeshot_signal.model.SignalModel.is_error" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns True if error status</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="grapeshot_signal.model.SignalModel.is_ok">
+<code class="descname">is_ok</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/grapeshot_signal/model.html#SignalModel.is_ok"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#grapeshot_signal.model.SignalModel.is_ok" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns True if ok status</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="grapeshot_signal.model.SignalModel.is_over_quota">
+<code class="descname">is_over_quota</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/grapeshot_signal/model.html#SignalModel.is_over_quota"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#grapeshot_signal.model.SignalModel.is_over_quota" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns true if over_quota status</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="grapeshot_signal.model.SignalModel.is_queued">
+<code class="descname">is_queued</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/grapeshot_signal/model.html#SignalModel.is_queued"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#grapeshot_signal.model.SignalModel.is_queued" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns True if queued status</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="grapeshot_signal.model.SignalModel.url">
+<code class="descname">url</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/grapeshot_signal/model.html#SignalModel.url"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#grapeshot_signal.model.SignalModel.url" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="grapeshot_signal.model.SignalStatus">
+<em class="property">class </em><code class="descclassname">grapeshot_signal.model.</code><code class="descname">SignalStatus</code><a class="reference internal" href="_modules/grapeshot_signal/model.html#SignalStatus"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#grapeshot_signal.model.SignalStatus" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#grapeshot_signal.model.SignalStatus" title="grapeshot_signal.model.SignalStatus"><code class="xref py py-class docutils literal"><span class="pre">grapeshot_signal.model.SignalStatus</span></code></a></p>
+<p>The status of a SignalModel</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-grapeshot_signal.rels">
+<span id="grapeshot-signal-rels-module"></span><h2>grapeshot_signal.rels module<a class="headerlink" href="#module-grapeshot_signal.rels" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-grapeshot_signal">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-grapeshot_signal" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">grapeshot_signal package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-grapeshot_signal.client">grapeshot_signal.client module</a></li>
+<li><a class="reference internal" href="#module-grapeshot_signal.config">grapeshot_signal.config module</a></li>
+<li><a class="reference internal" href="#module-grapeshot_signal.errors">grapeshot_signal.errors module</a></li>
+<li><a class="reference internal" href="#module-grapeshot_signal.model">grapeshot_signal.model module</a></li>
+<li><a class="reference internal" href="#module-grapeshot_signal.rels">grapeshot_signal.rels module</a></li>
+<li><a class="reference internal" href="#module-grapeshot_signal">Module contents</a></li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  <li><a href="modules.html">grapeshot_signal</a><ul>
+      <li>Previous: <a href="modules.html" title="previous chapter">grapeshot_signal</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/grapeshot_signal.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, Grapeshot Limited.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.8</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.9</a>
+      
+      |
+      <a href="_sources/grapeshot_signal.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

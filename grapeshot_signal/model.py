@@ -1,12 +1,13 @@
+from collections import namedtuple
 import grapeshot_signal.config as config
 from .errors import OverQuotaError
 
 
-class SignalStatus:
-    ok = 'ok'
-    queued = 'queued'
-    error = 'error'
-    over_quota = 'over_quota'
+class SignalStatus(namedtuple(
+        'SignalStatus',
+        'ok queued error over_quota')): # noqa
+
+    """The status of a SignalModel"""
 
 
 class SignalModel(dict):

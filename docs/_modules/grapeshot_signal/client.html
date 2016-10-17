@@ -55,15 +55,27 @@
 <span class="kn">from</span> <span class="nn">.errors</span> <span class="k">import</span> <span class="n">APIError</span><span class="p">,</span> <span class="n">OverQuotaError</span>
 
 
-<div class="viewcode-block" id="SignalClient"><a class="viewcode-back" href="../../reference.html#grapeshot_signal.SignalClient">[docs]</a><span class="k">class</span> <span class="nc">SignalClient</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="viewcode-block" id="SignalClient"><a class="viewcode-back" href="../../grapeshot_signal.html#grapeshot_signal.client.SignalClient">[docs]</a><span class="k">class</span> <span class="nc">SignalClient</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; A wrapper for the Signal web API.</span>
+
+<span class="sd">        Args:</span>
+
+<span class="sd">            api_key (str): An API key obtained from the `Developer Portal`_ The</span>
+<span class="sd">               validity of the key is not checked at intialisation time, but</span>
+<span class="sd">               invalid keys will result in errors when calling one of the get\_</span>
+<span class="sd">               methods.</span>
+
+
+<span class="sd">        .. _Developer Portal: https://api-portal.grapeshot.com/</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">api_key</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Initialize an instance with an API key (bearer token.)</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Initialize an instance with an API key (bearer token.)&quot;&quot;&quot;</span>
+
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">api_key</span> <span class="o">=</span> <span class="n">api_key</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">base_url</span> <span class="o">=</span> <span class="n">urlunparse</span><span class="p">((</span><span class="s1">&#39;https&#39;</span><span class="p">,</span> <span class="n">config</span><span class="o">.</span><span class="n">api_host</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">base_url</span> <span class="o">=</span> <span class="n">urlunparse</span><span class="p">((</span><span class="s1">&#39;https&#39;</span><span class="p">,</span> <span class="n">config</span><span class="o">.</span><span class="n">api_host</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+                                    <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
 
         <span class="c1"># Note that the User-agent string contains the library name, the</span>
         <span class="c1"># libary version, and the python version. This will help us track</span>
@@ -73,11 +85,10 @@
                            <span class="n">platform</span><span class="o">.</span><span class="n">python_version</span><span class="p">())</span>
 
     <span class="k">def</span> <span class="nf">_get_headers</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Private</span>
-<span class="sd">        Get all the headers we&#39;re going to need:</span>
-<span class="sd">        1. Authorization</span>
-<span class="sd">        3. User-agent</span>
+        <span class="sd">&quot;&quot;&quot;Create a dictionary for headers needed to make a request.</span>
+
+<span class="sd">        #. Authorization</span>
+<span class="sd">        #. User-agent</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;User-Agent&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">user_agent</span> <span class="p">}</span>
 
@@ -119,7 +130,8 @@
 
             <span class="n">data</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
 
-            <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">raise_over_quota</span> <span class="ow">and</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;status&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">SignalStatus</span><span class="o">.</span><span class="n">over_quota</span><span class="p">:</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">raise_over_quota</span> <span class="ow">and</span>
+                    <span class="n">data</span><span class="p">[</span><span class="s1">&#39;status&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">SignalStatus</span><span class="o">.</span><span class="n">over_quota</span><span class="p">):</span>
                 <span class="k">raise</span> <span class="n">OverQuotaError</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 
             <span class="k">return</span> <span class="n">SignalModel</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
@@ -131,15 +143,18 @@
 
             <span class="k">raise</span> <span class="n">APIError</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
 
-<div class="viewcode-block" id="SignalClient.get_page"><a class="viewcode-back" href="../../reference.html#grapeshot_signal.SignalClient.get_page">[docs]</a>    <span class="k">def</span> <span class="nf">get_page</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">embed</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="SignalClient.get_page"><a class="viewcode-back" href="../../grapeshot_signal.html#grapeshot_signal.client.SignalClient.get_page">[docs]</a>    <span class="k">def</span> <span class="nf">get_page</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">embed</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get analysis for a page (GET /v1/pages).</span>
 
-<span class="sd">        Example usage: client.get_page(&#39;http://example.org&#39;,</span>
-<span class="sd">                                       rels.segments)</span>
+<span class="sd">        Example:</span>
+<span class="sd">            Get the segments for a webpage::</span>
 
-<span class="sd">        If you specify embeds, you can access them in the result</span>
-<span class="sd">        model using utils.get_embedded(model, link_rel).</span>
+<span class="sd">                model = client.get_page(&#39;http://example.org&#39;, rels.segments)</span>
+
+<span class="sd">            Then access the embedded segments::</span>
+
+<span class="sd">                utils.get_embedded(model, rels.segments)</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            url (str): URL of the webpage to analyze.</span>
@@ -163,13 +178,14 @@
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get</span><span class="p">(</span><span class="s1">&#39;pages&#39;</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="SignalClient.get_link"><a class="viewcode-back" href="../../reference.html#grapeshot_signal.SignalClient.get_link">[docs]</a>    <span class="k">def</span> <span class="nf">get_link</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">link_rel</span><span class="p">):</span>
+<div class="viewcode-block" id="SignalClient.get_link"><a class="viewcode-back" href="../../grapeshot_signal.html#grapeshot_signal.client.SignalClient.get_link">[docs]</a>    <span class="k">def</span> <span class="nf">get_link</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">link_rel</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Gets the data for a link relation in a model.</span>
-<span class="sd">        For example, if you request a page and then want to get the</span>
-<span class="sd">        keywords for the page, you can call:</span>
 
-<span class="sd">        keywords_model = client.get_link(page_model, rels.keywords)</span>
+<span class="sd">        Example:</span>
+<span class="sd">            Get the keywords for the a page::</span>
+
+<span class="sd">                keywords_model = client.get_link(page_model, rels.keywords)</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            model (dict): a model returned from a previous API call.</span>

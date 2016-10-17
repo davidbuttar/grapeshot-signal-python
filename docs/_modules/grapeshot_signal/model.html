@@ -44,47 +44,48 @@
           <div class="body" role="main">
             
   <h1>Source code for grapeshot_signal.model</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">grapeshot_signal.config</span> <span class="k">as</span> <span class="nn">config</span>
+<span></span><span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">namedtuple</span>
+<span class="kn">import</span> <span class="nn">grapeshot_signal.config</span> <span class="k">as</span> <span class="nn">config</span>
 <span class="kn">from</span> <span class="nn">.errors</span> <span class="k">import</span> <span class="n">OverQuotaError</span>
 
 
-<div class="viewcode-block" id="SignalStatus"><a class="viewcode-back" href="../../reference.html#grapeshot_signal.model.SignalStatus">[docs]</a><span class="k">class</span> <span class="nc">SignalStatus</span><span class="p">:</span>
-    <span class="n">ok</span> <span class="o">=</span> <span class="s1">&#39;ok&#39;</span>
-    <span class="n">queued</span> <span class="o">=</span> <span class="s1">&#39;queued&#39;</span>
-    <span class="n">error</span> <span class="o">=</span> <span class="s1">&#39;error&#39;</span>
-    <span class="n">over_quota</span> <span class="o">=</span> <span class="s1">&#39;over_quota&#39;</span></div>
+<div class="viewcode-block" id="SignalStatus"><a class="viewcode-back" href="../../grapeshot_signal.html#grapeshot_signal.model.SignalStatus">[docs]</a><span class="k">class</span> <span class="nc">SignalStatus</span><span class="p">(</span><span class="n">namedtuple</span><span class="p">(</span>
+        <span class="s1">&#39;SignalStatus&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;ok queued error over_quota&#39;</span><span class="p">)):</span> <span class="c1"># noqa</span>
+
+    <span class="sd">&quot;&quot;&quot;The status of a SignalModel&quot;&quot;&quot;</span></div>
 
 
-<div class="viewcode-block" id="SignalModel"><a class="viewcode-back" href="../../reference.html#grapeshot_signal.model.SignalModel">[docs]</a><span class="k">class</span> <span class="nc">SignalModel</span><span class="p">(</span><span class="nb">dict</span><span class="p">):</span>
+<div class="viewcode-block" id="SignalModel"><a class="viewcode-back" href="../../grapeshot_signal.html#grapeshot_signal.model.SignalModel">[docs]</a><span class="k">class</span> <span class="nc">SignalModel</span><span class="p">(</span><span class="nb">dict</span><span class="p">):</span>
 
-<div class="viewcode-block" id="SignalModel.is_ok"><a class="viewcode-back" href="../../reference.html#grapeshot_signal.model.SignalModel.is_ok">[docs]</a>    <span class="k">def</span> <span class="nf">is_ok</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="SignalModel.is_ok"><a class="viewcode-back" href="../../grapeshot_signal.html#grapeshot_signal.model.SignalModel.is_ok">[docs]</a>    <span class="k">def</span> <span class="nf">is_ok</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns True if ok status</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;status&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">SignalStatus</span><span class="o">.</span><span class="n">ok</span></div>
 
-<div class="viewcode-block" id="SignalModel.is_queued"><a class="viewcode-back" href="../../reference.html#grapeshot_signal.model.SignalModel.is_queued">[docs]</a>    <span class="k">def</span> <span class="nf">is_queued</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="SignalModel.is_queued"><a class="viewcode-back" href="../../grapeshot_signal.html#grapeshot_signal.model.SignalModel.is_queued">[docs]</a>    <span class="k">def</span> <span class="nf">is_queued</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns True if queued status</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;status&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">SignalStatus</span><span class="o">.</span><span class="n">queued</span></div>
 
-<div class="viewcode-block" id="SignalModel.is_error"><a class="viewcode-back" href="../../reference.html#grapeshot_signal.model.SignalModel.is_error">[docs]</a>    <span class="k">def</span> <span class="nf">is_error</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="SignalModel.is_error"><a class="viewcode-back" href="../../grapeshot_signal.html#grapeshot_signal.model.SignalModel.is_error">[docs]</a>    <span class="k">def</span> <span class="nf">is_error</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns True if error status</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;status&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">SignalStatus</span><span class="o">.</span><span class="n">error</span></div>
 
-<div class="viewcode-block" id="SignalModel.is_over_quota"><a class="viewcode-back" href="../../reference.html#grapeshot_signal.model.SignalModel.is_over_quota">[docs]</a>    <span class="k">def</span> <span class="nf">is_over_quota</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="SignalModel.is_over_quota"><a class="viewcode-back" href="../../grapeshot_signal.html#grapeshot_signal.model.SignalModel.is_over_quota">[docs]</a>    <span class="k">def</span> <span class="nf">is_over_quota</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns true if over_quota status</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;status&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">SignalStatus</span><span class="o">.</span><span class="n">over_quota</span></div>
 
-    <span class="k">def</span> <span class="nf">url</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;url&#39;</span><span class="p">)</span>
+<div class="viewcode-block" id="SignalModel.url"><a class="viewcode-back" href="../../grapeshot_signal.html#grapeshot_signal.model.SignalModel.url">[docs]</a>    <span class="k">def</span> <span class="nf">url</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;url&#39;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="SignalModel.get_link_href"><a class="viewcode-back" href="../../reference.html#grapeshot_signal.model.SignalModel.get_link_href">[docs]</a>    <span class="k">def</span> <span class="nf">get_link_href</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">link_relation</span><span class="p">):</span>
+<div class="viewcode-block" id="SignalModel.get_link_href"><a class="viewcode-back" href="../../grapeshot_signal.html#grapeshot_signal.model.SignalModel.get_link_href">[docs]</a>    <span class="k">def</span> <span class="nf">get_link_href</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">link_relation</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return the link href for a link relation.</span>
 <span class="sd">        &#39;link_relation&#39; the link relation for which href is required.</span>
@@ -102,7 +103,7 @@
 
         <span class="k">return</span> <span class="n">result</span></div>
 
-<div class="viewcode-block" id="SignalModel.get_embedded"><a class="viewcode-back" href="../../reference.html#grapeshot_signal.model.SignalModel.get_embedded">[docs]</a>    <span class="k">def</span> <span class="nf">get_embedded</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">link_relation</span><span class="p">):</span>
+<div class="viewcode-block" id="SignalModel.get_embedded"><a class="viewcode-back" href="../../grapeshot_signal.html#grapeshot_signal.model.SignalModel.get_embedded">[docs]</a>    <span class="k">def</span> <span class="nf">get_embedded</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">link_relation</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return the embedded model for link_relation.</span>
 <span class="sd">        The returned object can be treated as a model in its own right.</span>

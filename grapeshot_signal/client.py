@@ -11,24 +11,25 @@ from .errors import APIError, OverQuotaError
 
 class SignalClient(object):
     """ A wrapper for the Signal web API.
-    """
-
-    def __init__(self, api_key):
-        """Initialize an instance with an API key (bearer token.)
 
         Args:
 
             api_key (str): An API key obtained from the `Developer Portal`_ The
                validity of the key is not checked at intialisation time, but
-               invalid keys will result in errors when calling one of the get_ methods.
+               invalid keys will result in errors when calling one of the get\_
+               methods.
 
 
         .. _Developer Portal: https://api-portal.grapeshot.com/
+    """
 
-        """
+    def __init__(self, api_key):
+        """Initialize an instance with an API key (bearer token.)"""
+
         super().__init__()
         self.api_key = api_key
-        self.base_url = urlunparse(('https', config.api_host, '', None, None, None))
+        self.base_url = urlunparse(('https', config.api_host, '',
+                                    None, None, None))
 
         # Note that the User-agent string contains the library name, the
         # libary version, and the python version. This will help us track
@@ -83,7 +84,8 @@ class SignalClient(object):
 
             data = response.json()
 
-            if config.raise_over_quota and data['status'] == SignalStatus.over_quota:
+            if (config.raise_over_quota and
+                    data['status'] == SignalStatus.over_quota):
                 raise OverQuotaError(data)
 
             return SignalModel(data)
@@ -99,11 +101,14 @@ class SignalClient(object):
         """
         Get analysis for a page (GET /v1/pages).
 
-        Example usage: client.get_page('http://example.org',
-                                       rels.segments)
+        Example:
+            Get the segments for a webpage::
 
-        If you specify embeds, you can access them in the result
-        model using utils.get_embedded(model, link_rel).
+                model = client.get_page('http://example.org', rels.segments)
+
+            Then access the embedded segments::
+
+                utils.get_embedded(model, rels.segments)
 
         Args:
             url (str): URL of the webpage to analyze.
@@ -130,10 +135,11 @@ class SignalClient(object):
     def get_link(self, model, link_rel):
         """
         Gets the data for a link relation in a model.
-        For example, if you request a page and then want to get the
-        keywords for the page, you can call:
 
-        keywords_model = client.get_link(page_model, rels.keywords)
+        Example:
+            Get the keywords for the a page::
+
+                keywords_model = client.get_link(page_model, rels.keywords)
 
         Args:
             model (dict): a model returned from a previous API call.
