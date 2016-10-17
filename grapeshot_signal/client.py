@@ -10,10 +10,21 @@ from .errors import APIError, OverQuotaError
 
 
 class SignalClient(object):
+    """ A wrapper for the Signal web API.
+    """
 
     def __init__(self, api_key):
-        """
-        Initialize an instance with an API key (bearer token.)
+        """Initialize an instance with an API key (bearer token.)
+
+        Args:
+
+            api_key (str): An API key obtained from the `Developer Portal`_ The
+               validity of the key is not checked at intialisation time, but
+               invalid keys will result in errors when calling one of the get_ methods.
+
+
+        .. _Developer Portal: https://api-portal.grapeshot.com/
+
         """
         super().__init__()
         self.api_key = api_key
@@ -27,11 +38,10 @@ class SignalClient(object):
                            platform.python_version())
 
     def _get_headers(self):
-        """
-        Private
-        Get all the headers we're going to need:
-        1. Authorization
-        3. User-agent
+        """Create a dictionary for headers needed to make a request.
+
+        #. Authorization
+        #. User-agent
         """
         headers = {'User-Agent': self.user_agent }
 
