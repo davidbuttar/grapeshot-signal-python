@@ -8,7 +8,7 @@
     
     <title>Tutorial &#8212; Grapeshot Signal SDK 0.1 documentation</title>
     
-    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pyramid.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     
     <script type="text/javascript">
@@ -29,15 +29,33 @@
     <link rel="top" title="Grapeshot Signal SDK 0.1 documentation" href="index.html" />
     <link rel="next" title="grapeshot_signal" href="modules.html" />
     <link rel="prev" title="Quick Start" href="quickstart.html" />
-   
-  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
-  
-  
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Neuton&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nobile:regular,italic,bold,bolditalic&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
+<!--[if lte IE 6]>
+<link rel="stylesheet" href="_static/ie6.css" type="text/css" media="screen" charset="utf-8" />
+<![endif]-->
 
   </head>
   <body role="document">
-  
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="modules.html" title="grapeshot_signal"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="quickstart.html" title="Quick Start"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Grapeshot Signal SDK 0.1 documentation</a> &#187;</li> 
+      </ul>
+    </div>  
 
     <div class="document">
       <div class="documentwrapper">
@@ -104,21 +122,121 @@ Type &quot;help&quot;, &quot;copyright&quot;, &quot;credits&quot; or &quot;licen
 account has an associated monthly quota. The free tier enables development and
 experimentation without incurring any cost. Paid subscriptions provide higher
 monthly quotas. Therefore you should take care with your API keys, since any
-use of your API keys counts against your monthly quota. If you believe that one
-of your keys has been compromised then you can generate a new key to replace it
-via the <a class="reference external" href="https://api-portal.grapeshot.com/">Developer Portal</a>.</p>
+use of your API keys counts against your monthly quota.</p>
 </div>
-<div class="section" id="create-a-signalclient-instance">
-<h2>Create a <code class="code docutils literal"><span class="pre">SignalClient</span></code> instance<a class="headerlink" href="#create-a-signalclient-instance" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="use-a-signalclient-instance">
+<h2>Use a <a class="reference internal" href="grapeshot_signal.html#grapeshot_signal.client.SignalClient" title="grapeshot_signal.client.SignalClient"><code class="xref py py-class docutils literal"><span class="pre">SignalClient</span></code></a> instance<a class="headerlink" href="#use-a-signalclient-instance" title="Permalink to this headline">¶</a></h2>
 <p>Optionally create a file config_local.py somewhere on your python load
 path.</p>
-<div class="literal-block-wrapper container" id="id1">
-<div class="code-block-caption"><span class="caption-text">config_local.py</span><a class="headerlink" href="#id1" title="Permalink to this code">¶</a></div>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">api_key</span> <span class="o">=</span> <span class="s2">&quot;gs_XB5VRbiXQe2d5GimFX846AY-SdXF0gqnFwBAPQYpl9axzYVJYsHAmz&quot;</span>
+<div class="literal-block-wrapper container" id="id2">
+<div class="code-block-caption"><span class="caption-text">config_local.py</span><a class="headerlink" href="#id2" title="Permalink to this code">¶</a></div>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">api_host</span> <span class="o">=</span> <span class="s2">&quot;openapi-qa.grapeshot.co.uk&quot;</span>
+<span class="n">api_key</span> <span class="o">=</span> <span class="s2">&quot;gs_XB5VRbiXQe2d5GimFX846AY-SdXF0gqnFwBAPQYpl9axzYVJYsHAmo&quot;</span>
 </pre></div>
 </div>
 </div>
-<p>You should replace the key with your own API key.</p>
+<p>You should replace the key with your own API key. This step can be skipped, but
+provides convenient access to your API key.</p>
+<p>Then create a <a class="reference internal" href="grapeshot_signal.html#grapeshot_signal.client.SignalClient" title="grapeshot_signal.client.SignalClient"><code class="xref py py-class docutils literal"><span class="pre">SignalClient</span></code></a> instance and use it obtain information about a web page:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">grapeshot_signal</span> <span class="k">import</span> <span class="n">SignalClient</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">rels</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">client</span> <span class="o">=</span> <span class="n">SignalClient</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">api_key</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">page_model</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get_page</span><span class="p">(</span><span class="s2">&quot;http://www.bbc.co.uk/sport/cycling/37691574&quot;</span><span class="p">,</span> <span class="p">[</span><span class="n">rels</span><span class="o">.</span><span class="n">keywords</span><span class="p">,</span> <span class="n">rels</span><span class="o">.</span><span class="n">segments</span><span class="p">])</span> <span class="c1"># try any web page here</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">page_model</span><span class="o">.</span><span class="n">is_ok</span><span class="p">()</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+<p>See <a class="reference internal" href="#errors"><span class="std std-ref">Errors</span></a> below if <a class="reference internal" href="grapeshot_signal.html#grapeshot_signal.model.SignalModel.is_ok" title="grapeshot_signal.model.SignalModel.is_ok"><code class="xref py py-meth docutils literal"><span class="pre">is_ok()</span></code></a> returns <code class="docutils literal"><span class="pre">False</span></code>.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">kw_model</span> <span class="o">=</span> <span class="n">page_model</span><span class="o">.</span><span class="n">get_embedded</span><span class="p">(</span><span class="n">rels</span><span class="o">.</span><span class="n">keywords</span><span class="p">)</span>
+<span class="go">&gt;&gt;&gt;</span>
+</pre></div>
+</div>
+<p>Note that this is itself a <a class="reference internal" href="grapeshot_signal.html#grapeshot_signal.model.SignalModel" title="grapeshot_signal.model.SignalModel"><code class="xref py py-class docutils literal"><span class="pre">SignalModel</span></code></a> instance. In this case it has a <code class="docutils literal"><span class="pre">'keywords'</span></code> property:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">pprint</span><span class="p">(</span><span class="n">kw_model</span><span class="p">[</span><span class="s1">&#39;keywords&#39;</span><span class="p">])</span>
+<span class="go">[{&#39;name&#39;: &#39;Bradley Wiggins&#39;, &#39;score&#39;: 2.154},</span>
+<span class="go">{&#39;name&#39;: &#39;Chris Froome&#39;, &#39;score&#39;: 2.154},</span>
+<span class="go">{&#39;name&#39;: &#39;Sport&#39;, &#39;score&#39;: 2.071},</span>
+<span class="go">{&#39;name&#39;: &quot;cycling&#39;s&quot;, &#39;score&#39;: 1.466},</span>
+<span class="go">{&#39;name&#39;: &#39;Team Sky&#39;, &#39;score&#39;: 1.466},</span>
+<span class="go">{&#39;name&#39;: &#39;Tour de France&#39;, &#39;score&#39;: 1.466},</span>
+<span class="go">{&#39;name&#39;: &#39;allergies&#39;, &#39;score&#39;: 1.167},</span>
+<span class="go">{&#39;name&#39;: &#39;steroid&#39;, &#39;score&#39;: 1.167},</span>
+<span class="go">{&#39;name&#39;: &#39;treatment&#39;, &#39;score&#39;: 1.167},</span>
+<span class="go">{&#39;name&#39;: &#39;asthma&#39;, &#39;score&#39;: 0.725},</span>
+<span class="go">{&#39;name&#39;: &#39;athletes&#39;, &#39;score&#39;: 0.725},</span>
+<span class="go">{&#39;name&#39;: &#39;banned substances&#39;, &#39;score&#39;: 0.725},</span>
+<span class="go">{&#39;name&#39;: &#39;Dave Brailsford&#39;, &#39;score&#39;: 0.725},</span>
+<span class="go">{&#39;name&#39;: &quot;Giro d&#39;Italia&quot;, &#39;score&#39;: 0.725},</span>
+<span class="go">{&#39;name&#39;: &#39;Mark Cavendish&#39;, &#39;score&#39;: 0.725},</span>
+<span class="go">{&#39;name&#39;: &#39;medical&#39;, &#39;score&#39;: 0.725},</span>
+<span class="go">{&#39;name&#39;: &#39;Olympian&#39;, &#39;score&#39;: 0.725},</span>
+<span class="go">{&#39;name&#39;: &#39;respiratory&#39;, &#39;score&#39;: 0.725},</span>
+<span class="go">{&#39;name&#39;: &#39;Rio Olympics&#39;, &#39;score&#39;: 0.725},</span>
+<span class="go">{&#39;name&#39;: &#39;symptoms&#39;, &#39;score&#39;: 0.725},</span>
+<span class="go">{&#39;name&#39;: &#39;therapeutic&#39;, &#39;score&#39;: 0.725},</span>
+<span class="go">{&#39;name&#39;: &#39;UCI&#39;, &#39;score&#39;: 0.725}]</span>
+</pre></div>
+</div>
+<p>Note that:</p>
+<ol class="arabic simple">
+<li>The scores associated with each keyword are a measure of the relative
+importance of each keyword within the page, but are not necessarily
+comparable with scores obtained from different pages.</li>
+<li>keywords can be short phrases (as in the above example).</li>
+</ol>
+<p>The segments for the model are also available:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">pprint</span><span class="p">(</span><span class="n">page_model</span><span class="o">.</span><span class="n">get_embedded</span><span class="p">(</span><span class="n">rels</span><span class="o">.</span><span class="n">segments</span><span class="p">)[</span><span class="s1">&#39;segments&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
+<span class="go">{&#39;matchterms&#39;: [{&#39;name&#39;: &#39;Bradley Wiggins&#39;, &#39;score&#39;: 2.154},</span>
+<span class="go">                {&#39;name&#39;: &#39;Chris Froome&#39;, &#39;score&#39;: 2.154},</span>
+<span class="go">                {&#39;name&#39;: &#39;Sport&#39;, &#39;score&#39;: 2.071},</span>
+<span class="go">                {&#39;name&#39;: &quot;cycling&#39;s&quot;, &#39;score&#39;: 1.466},</span>
+<span class="go">                {&#39;name&#39;: &#39;Team Sky&#39;, &#39;score&#39;: 1.466},</span>
+<span class="go">                {&#39;name&#39;: &#39;Tour de France&#39;, &#39;score&#39;: 1.466},</span>
+<span class="go">                {&#39;name&#39;: &#39;athletes&#39;, &#39;score&#39;: 0.725},</span>
+<span class="go">                {&#39;name&#39;: &#39;Dave Brailsford&#39;, &#39;score&#39;: 0.725},</span>
+<span class="go">                {&#39;name&#39;: &quot;Giro d&#39;Italia&quot;, &#39;score&#39;: 0.725},</span>
+<span class="go">                {&#39;name&#39;: &#39;Mark Cavendish&#39;, &#39;score&#39;: 0.725},</span>
+<span class="go">                {&#39;name&#39;: &#39;Olympics&#39;, &#39;score&#39;: 0.725},</span>
+<span class="go">                {&#39;name&#39;: &#39;UCI&#39;, &#39;score&#39;: 0.725}],</span>
+<span class="go">&#39;name&#39;: &#39;gs_sport&#39;,</span>
+<span class="go">&#39;score&#39;: 48.262}</span>
+<span class="go">&gt;&gt;&gt;</span>
+</pre></div>
+</div>
+<p>The segments each have a name. A brief description for each is here:
+<a class="reference external" href="https://devportal-qa.grapeshot.co.uk/documentation/segment_descriptions">https://devportal-qa.grapeshot.co.uk/documentation/segment_descriptions</a>. The
+value for the <code class="docutils literal"><span class="pre">'matchterms'</span></code> key gives the keywords that contributed towards
+the categorisation of the page with this segment.</p>
+</div>
+<div class="section" id="errors">
+<span id="id1"></span><h2>Errors<a class="headerlink" href="#errors" title="Permalink to this headline">¶</a></h2>
+<p>In some circumstances <a class="reference internal" href="grapeshot_signal.html#grapeshot_signal.model.SignalModel.is_ok" title="grapeshot_signal.model.SignalModel.is_ok"><code class="xref py py-meth docutils literal"><span class="pre">is_ok()</span></code></a> could return <code class="docutils literal"><span class="pre">False</span></code>, for example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">oops_page</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get_page</span><span class="p">(</span><span class="s2">&quot;http://grapeshot.com/zzzz&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">oops_page</span><span class="o">.</span><span class="n">is_ok</span><span class="p">()</span>
+<span class="go">False</span>
+</pre></div>
+</div>
+<p>We can check the page status directly:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">oops_page</span><span class="p">[</span><span class="s1">&#39;status&#39;</span><span class="p">]</span>
+<span class="go">&#39;queued&#39;</span>
+</pre></div>
+</div>
+<p>A status of <cite>queued</cite> means that this page has not (recently) been crawled. The
+act of requesting information about the page will ensure that it is crawled
+soon. So requesting information again gives a different result (if the page has
+been crawled):</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">oops_page</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get_page</span><span class="p">(</span><span class="s2">&quot;http://grapeshot.com/zzzz&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">oops_page</span><span class="p">[</span><span class="s1">&#39;status&#39;</span><span class="p">]</span>
+<span class="go">&#39;error&#39;</span>
+</pre></div>
+</div>
+<p>In these circumstances the model will have a <cite>error_code</cite> and <cite>error_message</cite> keys:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">oops_page</span><span class="p">[</span><span class="s1">&#39;error_message&#39;</span><span class="p">]</span>
+<span class="go">&#39;gx_notfound&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">oops_page</span><span class="p">[</span><span class="s1">&#39;error_message&#39;</span><span class="p">]</span>
+<span class="go">&#39;Grapeshot was unable to analyse this page because the site returned a Not Found (404) error when our crawler tried to visit it.&#39;</span>
+</pre></div>
+</div>
+<p>The codes and associated error messages are documented here: <a class="reference external" href="https://api-portal.grapeshot.com/documentation/error_codes">https://api-portal.grapeshot.com/documentation/error_codes</a>. In this case we&#8217;ve asked for a non-existent page.</p>
 </div>
 </div>
 
@@ -139,26 +257,18 @@ path.</p>
 </li>
 <li><a class="reference internal" href="#check-import">Check Import</a></li>
 <li><a class="reference internal" href="#obtain-an-api-key">Obtain an API key</a></li>
-<li><a class="reference internal" href="#create-a-signalclient-instance">Create a <code class="code docutils literal"><span class="pre">SignalClient</span></code> instance</a></li>
+<li><a class="reference internal" href="#use-a-signalclient-instance">Use a <code class="docutils literal"><span class="pre">SignalClient</span></code> instance</a></li>
+<li><a class="reference internal" href="#errors">Errors</a></li>
 </ul>
 </li>
 </ul>
-<div class="relations">
-<h3>Related Topics</h3>
-<ul>
-  <li><a href="index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="quickstart.html" title="previous chapter">Quick Start</a></li>
-      <li>Next: <a href="modules.html" title="next chapter">grapeshot_signal</a></li>
-  </ul></li>
-</ul>
-</div>
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="_sources/tutorial.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="quickstart.html"
+                        title="previous chapter">Quick Start</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="modules.html"
+                        title="next chapter">grapeshot_signal</a></p>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="search.html" method="get">
@@ -173,20 +283,27 @@ path.</p>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="footer">
-      &copy;2016, Grapeshot Limited.
-      
-      |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.8</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.9</a>
-      
-      |
-      <a href="_sources/tutorial.txt"
-          rel="nofollow">Page source</a>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="modules.html" title="grapeshot_signal"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="quickstart.html" title="Quick Start"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Grapeshot Signal SDK 0.1 documentation</a> &#187;</li> 
+      </ul>
     </div>
-
-    
-
-    
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2016, Grapeshot Limited.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.8.
+    </div>
   </body>
 </html>

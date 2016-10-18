@@ -58,3 +58,4 @@ venv
 
 # Emacs backups
 *~
+/config_local.py
