@@ -54,6 +54,7 @@ apidoc:
 .PHONY: clean
 clean:
 	rm -rf $(BUILDDIR)/*
+	rm -rf $(DOCSDIR)/*
 
 .PHONY: html
 html:
