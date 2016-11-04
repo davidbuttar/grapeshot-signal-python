@@ -7,7 +7,7 @@ Quick Start
 
    For alternative installation methods see the detailed documentation.
 
-2. Obtain an api key via http://api-portal.grapeshot.co.uk.
+2. Obtain an api key via https://api-portal.grapeshot.com.
 
 3. In your code create an instance of SignalClient, passing in your api key::
 

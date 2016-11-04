@@ -130,8 +130,8 @@ use of your API keys counts against your monthly quota.</p>
 path.</p>
 <div class="literal-block-wrapper container" id="id2">
 <div class="code-block-caption"><span class="caption-text">config_local.py</span><a class="headerlink" href="#id2" title="Permalink to this code">¶</a></div>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">api_host</span> <span class="o">=</span> <span class="s2">&quot;openapi-qa.grapeshot.co.uk&quot;</span>
-<span class="n">api_key</span> <span class="o">=</span> <span class="s2">&quot;gs_XB5VRbiXQe2d5GimFX846AY-SdXF0gqnFwBAPQYpl9axzYVJYsHAmo&quot;</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">api_host</span> <span class="o">=</span> <span class="s2">&quot;signal-api.grapeshot.com&quot;</span>
+<span class="n">api_key</span> <span class="o">=</span> <span class="s2">&quot;gs_12QXB5VRbi2d5GimFX846AY-SdXF0gqnFwBAPQYpl9axzYVJYsxxx&quot;</span>
 </pre></div>
 </div>
 </div>
@@ -151,7 +151,8 @@ provides convenient access to your API key.</p>
 </pre></div>
 </div>
 <p>Note that this is itself a <a class="reference internal" href="grapeshot_signal.html#grapeshot_signal.model.SignalModel" title="grapeshot_signal.model.SignalModel"><code class="xref py py-class docutils literal"><span class="pre">SignalModel</span></code></a> instance. In this case it has a <code class="docutils literal"><span class="pre">'keywords'</span></code> property:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">pprint</span><span class="p">(</span><span class="n">kw_model</span><span class="p">[</span><span class="s1">&#39;keywords&#39;</span><span class="p">])</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pprint</span> <span class="k">import</span> <span class="n">pprint</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pprint</span><span class="p">(</span><span class="n">kw_model</span><span class="p">[</span><span class="s1">&#39;keywords&#39;</span><span class="p">])</span>
 <span class="go">[{&#39;name&#39;: &#39;Bradley Wiggins&#39;, &#39;score&#39;: 2.154},</span>
 <span class="go">{&#39;name&#39;: &#39;Chris Froome&#39;, &#39;score&#39;: 2.154},</span>
 <span class="go">{&#39;name&#39;: &#39;Sport&#39;, &#39;score&#39;: 2.071},</span>
@@ -203,7 +204,7 @@ comparable with scores obtained from different pages.</li>
 </pre></div>
 </div>
 <p>The segments each have a name. A brief description for each is here:
-<a class="reference external" href="https://devportal-qa.grapeshot.co.uk/documentation/segment_descriptions">https://devportal-qa.grapeshot.co.uk/documentation/segment_descriptions</a>. The
+<a class="reference external" href="https://api-portal.grapeshot.com/documentation/segment_descriptions">https://api-portal.grapeshot.com/documentation/segment_descriptions</a>. The
 value for the <code class="docutils literal"><span class="pre">'matchterms'</span></code> key gives the keywords that contributed towards
 the categorisation of the page with this segment.</p>
 </div>
