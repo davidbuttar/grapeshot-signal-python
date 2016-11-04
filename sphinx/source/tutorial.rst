@@ -95,6 +95,7 @@ See :ref:`errors` below if :meth:`.is_ok` returns ``False``.
 
 Note that this is itself a :class:`.SignalModel` instance. In this case it has a ``'keywords'`` property::
 
+  >>> from pprint import pprint
   >>> pprint(kw_model['keywords'])
   [{'name': 'Bradley Wiggins', 'score': 2.154},
   {'name': 'Chris Froome', 'score': 2.154},
