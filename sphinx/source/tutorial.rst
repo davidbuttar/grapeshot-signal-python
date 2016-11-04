@@ -147,7 +147,7 @@ The segments for the model are also available::
   >>>
 
 The segments each have a name. A brief description for each is here:
-https://devportal-qa.grapeshot.co.uk/documentation/segment_descriptions. The
+https://api-portal.grapeshot.com/documentation/segment_descriptions. The
 value for the ``'matchterms'`` key gives the keywords that contributed towards
 the categorisation of the page with this segment.
 
