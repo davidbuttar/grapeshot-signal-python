@@ -47,7 +47,7 @@ help:
 	@echo "  coverage   to run coverage check of the documentation (if enabled)"
 	@echo "  dummy      to check syntax errors of document sources"
 
-.PHONE: apidoc
+.PHONY: apidoc
 apidoc:
 	$(APIDOC) -f -o $(SOURCE) ../grapeshot_signal
 
