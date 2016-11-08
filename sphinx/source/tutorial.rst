@@ -95,6 +95,7 @@ See :ref:`errors` below if :meth:`.is_ok` returns ``False``.
 
 Note that this is itself a :class:`.SignalModel` instance. In this case it has a ``'keywords'`` property::
 
+  >>> from pprint import pprint
   >>> pprint(kw_model['keywords'])
   [{'name': 'Bradley Wiggins', 'score': 2.154},
   {'name': 'Chris Froome', 'score': 2.154},
@@ -147,7 +148,7 @@ The segments for the model are also available::
   >>>
 
 The segments each have a name. A brief description for each is here:
-https://devportal-qa.grapeshot.co.uk/documentation/segment_descriptions. The
+https://api-portal.grapeshot.com/documentation/segment_descriptions. The
 value for the ``'matchterms'`` key gives the keywords that contributed towards
 the categorisation of the page with this segment.
 

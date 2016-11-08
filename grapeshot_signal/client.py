@@ -26,7 +26,7 @@ class SignalClient(object):
     def __init__(self, api_key):
         """Initialize an instance with an API key (bearer token.)"""
 
-        super().__init__()
+        super(SignalClient, self).__init__()
         self.api_key = api_key
         self.base_url = urlunparse(('https', config.api_host, '',
                                     None, None, None))
@@ -44,7 +44,7 @@ class SignalClient(object):
         #. Authorization
         #. User-agent
         """
-        headers = {'User-Agent': self.user_agent }
+        headers = {'User-Agent': self.user_agent}
 
         if self.api_key:
             headers['Authorization'] = 'Bearer ' + self.api_key

@@ -1,10 +1,11 @@
 import json
 import os
 from httmock import urlmatch
+import codecs  # builtin open has no encoding in py2
 
 
 def load_file(file):
-    with open(os.path.join('.', 'tests', 'data', file),
+    with codecs.open(os.path.join('.', 'tests', 'data', file),
               encoding="utf-8") as fp:
         return fp.read()
 
@@ -14,7 +15,8 @@ def page_mock(url, request):
     return load_file('page.json')
 
 
-@urlmatch(path='/v1/pages', query=r'.*((embed=keywords.*)?(embed=segments.*)?(url=.+))+')
+@urlmatch(path='/v1/pages',
+          query=r'.*((embed=keywords.*)?(embed=segments.*)?(url=.+))+')
 def page_embed_segments_keywords_mock(url, request):
     return load_file('page_embed_segments_keywords.json')
 
@@ -63,7 +65,8 @@ def page_analyze_error_mock(url, request):
     return load_file('page_analyze_error.json')
 
 
-@urlmatch(path='/v1/pages', query=r'.*((embed=keywords.*)?(embed=segments.*)?(url=.+))+')
+@urlmatch(path='/v1/pages',
+          query=r'.*((embed=keywords.*)?(embed=segments.*)?(url=.+))+')
 def page_embed_segments_over_quota_mock(url, request):
     return load_file('page_embed_segments_over_quota.json')
 

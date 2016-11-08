@@ -8,7 +8,7 @@
     
     <title>Tutorial &#8212; Grapeshot Signal SDK 0.1 documentation</title>
     
-    <link rel="stylesheet" href="_static/pyramid.css" type="text/css" />
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     
     <script type="text/javascript">
@@ -29,33 +29,15 @@
     <link rel="top" title="Grapeshot Signal SDK 0.1 documentation" href="index.html" />
     <link rel="next" title="grapeshot_signal" href="modules.html" />
     <link rel="prev" title="Quick Start" href="quickstart.html" />
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Neuton&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nobile:regular,italic,bold,bolditalic&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
-<!--[if lte IE 6]>
-<link rel="stylesheet" href="_static/ie6.css" type="text/css" media="screen" charset="utf-8" />
-<![endif]-->
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
   </head>
   <body role="document">
-
-    <div class="related" role="navigation" aria-label="related navigation">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="modules.html" title="grapeshot_signal"
-             accesskey="N">next</a> |</li>
-        <li class="right" >
-          <a href="quickstart.html" title="Quick Start"
-             accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">Grapeshot Signal SDK 0.1 documentation</a> &#187;</li> 
-      </ul>
-    </div>  
+  
 
     <div class="document">
       <div class="documentwrapper">
@@ -130,8 +112,8 @@ use of your API keys counts against your monthly quota.</p>
 path.</p>
 <div class="literal-block-wrapper container" id="id2">
 <div class="code-block-caption"><span class="caption-text">config_local.py</span><a class="headerlink" href="#id2" title="Permalink to this code">¶</a></div>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">api_host</span> <span class="o">=</span> <span class="s2">&quot;openapi-qa.grapeshot.co.uk&quot;</span>
-<span class="n">api_key</span> <span class="o">=</span> <span class="s2">&quot;gs_XB5VRbiXQe2d5GimFX846AY-SdXF0gqnFwBAPQYpl9axzYVJYsHAmo&quot;</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">api_host</span> <span class="o">=</span> <span class="s2">&quot;signal-api.grapeshot.com&quot;</span>
+<span class="n">api_key</span> <span class="o">=</span> <span class="s2">&quot;gs_12QXB5VRbi2d5GimFX846AY-SdXF0gqnFwBAPQYpl9axzYVJYsxxx&quot;</span>
 </pre></div>
 </div>
 </div>
@@ -151,7 +133,8 @@ provides convenient access to your API key.</p>
 </pre></div>
 </div>
 <p>Note that this is itself a <a class="reference internal" href="grapeshot_signal.html#grapeshot_signal.model.SignalModel" title="grapeshot_signal.model.SignalModel"><code class="xref py py-class docutils literal"><span class="pre">SignalModel</span></code></a> instance. In this case it has a <code class="docutils literal"><span class="pre">'keywords'</span></code> property:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">pprint</span><span class="p">(</span><span class="n">kw_model</span><span class="p">[</span><span class="s1">&#39;keywords&#39;</span><span class="p">])</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pprint</span> <span class="k">import</span> <span class="n">pprint</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pprint</span><span class="p">(</span><span class="n">kw_model</span><span class="p">[</span><span class="s1">&#39;keywords&#39;</span><span class="p">])</span>
 <span class="go">[{&#39;name&#39;: &#39;Bradley Wiggins&#39;, &#39;score&#39;: 2.154},</span>
 <span class="go">{&#39;name&#39;: &#39;Chris Froome&#39;, &#39;score&#39;: 2.154},</span>
 <span class="go">{&#39;name&#39;: &#39;Sport&#39;, &#39;score&#39;: 2.071},</span>
@@ -203,7 +186,7 @@ comparable with scores obtained from different pages.</li>
 </pre></div>
 </div>
 <p>The segments each have a name. A brief description for each is here:
-<a class="reference external" href="https://devportal-qa.grapeshot.co.uk/documentation/segment_descriptions">https://devportal-qa.grapeshot.co.uk/documentation/segment_descriptions</a>. The
+<a class="reference external" href="https://api-portal.grapeshot.com/documentation/segment_descriptions">https://api-portal.grapeshot.com/documentation/segment_descriptions</a>. The
 value for the <code class="docutils literal"><span class="pre">'matchterms'</span></code> key gives the keywords that contributed towards
 the categorisation of the page with this segment.</p>
 </div>
@@ -262,13 +245,22 @@ been crawled):</p>
 </ul>
 </li>
 </ul>
-
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="quickstart.html"
-                        title="previous chapter">Quick Start</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="modules.html"
-                        title="next chapter">grapeshot_signal</a></p>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="quickstart.html" title="previous chapter">Quick Start</a></li>
+      <li>Next: <a href="modules.html" title="next chapter">grapeshot_signal</a></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/tutorial.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="search.html" method="get">
@@ -283,27 +275,20 @@ been crawled):</p>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related" role="navigation" aria-label="related navigation">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="genindex.html" title="General Index"
-             >index</a></li>
-        <li class="right" >
-          <a href="py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="modules.html" title="grapeshot_signal"
-             >next</a> |</li>
-        <li class="right" >
-          <a href="quickstart.html" title="Quick Start"
-             >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">Grapeshot Signal SDK 0.1 documentation</a> &#187;</li> 
-      </ul>
+    <div class="footer">
+      &copy;2016, Grapeshot Limited.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.8</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.9</a>
+      
+      |
+      <a href="_sources/tutorial.txt"
+          rel="nofollow">Page source</a>
     </div>
-    <div class="footer" role="contentinfo">
-        &#169; Copyright 2016, Grapeshot Limited.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.8.
-    </div>
+
+    
+
+    
   </body>
 </html>

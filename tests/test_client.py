@@ -1,7 +1,8 @@
+from __future__ import absolute_import
 import unittest
 from httmock import urlmatch, HTTMock
 from grapeshot_signal import SignalClient, APIError, OverQuotaError, rels
-import tests.mocks as mocks
+from tests import mocks
 
 
 class TestClient(unittest.TestCase):
@@ -128,4 +129,3 @@ class TestClient(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
-
