@@ -13,6 +13,16 @@ class OverQuotaError(Exception):
         return self.data['_links']['self']['href']
 
 
+class RateLimitError(Exception):
+
+    def __init__(self, response):
+        Exception.__init__(self, "Grapeshot Rate Limited")
+        self.response = response
+
+    def retry_after(self):
+        return int(self.response.headers.get('Retry-After', '2'))
+
+
 class APIError(Exception):
 
     def __init__(self, code, data):
