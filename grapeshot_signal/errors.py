@@ -1,5 +1,4 @@
 
-
 class OverQuotaError(Exception):
 
     def __init__(self, data):
@@ -22,6 +21,11 @@ class RateLimitError(Exception):
     def retry_after(self):
         return int(self.response.headers.get('Retry-After', '2'))
 
+    def status_code(self):
+        return 429
+
+    def __str__(self):
+        return "429"
 
 class APIError(Exception):
 

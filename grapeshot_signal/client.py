@@ -6,7 +6,7 @@ except ImportError:  # pragma: no cover
     from urlparse import urljoin, urlunparse  # pragma: no cover
 import grapeshot_signal.config as config
 from .model import SignalModel, SignalStatus
-from .errors import APIError, OverQuotaError
+from .errors import APIError, OverQuotaError, RateLimitError
 
 
 class SignalClient(object):
@@ -23,13 +23,22 @@ class SignalClient(object):
         .. _Developer Portal: https://api-portal.grapeshot.com/
     """
 
-    def __init__(self, api_key):
-        """Initialize an instance with an API key (bearer token.)"""
+    def __init__(self, api_key, session=True):
+        """Initialize an instance with an API key (bearer token.)  If session is True
+           attempt to using connection pooling, which may give better
+           performance when making multiple requests.
+
+        """
 
         super(SignalClient, self).__init__()
         self.api_key = api_key
         self.base_url = urlunparse(('https', config.api_host, '',
                                     None, None, None))
+
+        print(self.base_url)
+        self._session = requests.Session() if session else None
+        self._make_call = self._session.get if session else requests.get
+
 
         # Note that the User-agent string contains the library name, the
         # libary version, and the python version. This will help us track
@@ -78,7 +87,7 @@ class SignalClient(object):
 
         api_url = urljoin(base_url, path)
 
-        response = requests.get(api_url, params=params, headers=headers)
+        response = self._make_call(api_url, params=params, headers=headers)
 
         if 200 <= response.status_code < 299:
 
@@ -89,6 +98,10 @@ class SignalClient(object):
                 raise OverQuotaError(data)
 
             return SignalModel(data)
+
+        elif response.status_code == 429:
+            raise RateLimitError(response)
+
         else:
             try:
                 data = response.json()
