@@ -3,53 +3,46 @@
 # Uses async/await and type annotations -> needs python 3.5
 import argparse
 import asyncio
-import logging
 import concurrent
 import functools
 import collections
 import os
 import time
 from grapeshot_signal import SignalClient, SignalModel, rels,\
-    APIError, OverQuotaError, RateLimitError, config
+    APIError, OverQuotaError, config
 import tqdm
 import json
 from utils import line_count
-
-
-print(config.api_host)
-
-logger = logging.getLogger()
 
 
 class UrlData(dict):
     __getattr__ = dict.__getitem__
     __setattr__ = dict.__setitem__
 
-    def __init__(self, url, lineno, try_count=0, result=None,
+    def __init__(self, url, client_id, try_count=0, result=None,
                  request_time=0, response_time=0):
         '''
          Args:
             url: read from input
-            lineno: line number from input (0 based)
+            client_id: client identified (not used but preserved)
             try_count: number of times url has been tried
-                       (retried if 429 response)
-            result: result of the call either SignalModel or some exception
-                    (429s are retried)
+            result: result of the signal api call
             request_time: time stamp when the call was made (approx)
             response_time: time stamp when response received (approx)
         '''
         self.url = url
-        self.lineno = lineno
+        self.client_id = client_id
         self.try_count = try_count
         self.result = result
         self.request_time = request_time
         self.response_time = response_time
 
     def prepare(self):
-        '''change values of self suitable for json output'''
+        '''Destructively change self in preparation for json output.
+        '''
 
         if isinstance(self.result, Exception):
-            if isinstance(self.result, (APIError, RateLimitError)):
+            if isinstance(self.result, APIError):
                 self.status_code = self.result.status_code()
                 self.result = str(self.result)
 
@@ -74,18 +67,16 @@ class UrlData(dict):
         else:
             self.result = 'Unexpected result'
 
+    async def write_json(self, of, newline=True):
+        '''Write a json representation to `of`, which should be quack like
+          a writable file. If `newline` tests true, write a newline at the end.
+        '''
+        self.prepare()
+        json.dump(self, of)
+        if newline:
+            of.write(os.linesep)
 
-END_OF_INPUT = UrlData('', -1)
-
-
-
-async def write_result(url_data, of):
-    '''output result to `of`, which should be a writable file
-
-    '''
-    url_data.prepare()
-    json.dump(url_data, of)
-    of.write(os.linesep)
+END_OF_INPUT = None
 
 
 def get_page(client, url_data):
@@ -101,9 +92,14 @@ def get_page(client, url_data):
     return url_data
 
 
-async def consume_urls(executor, inqueue: asyncio.Queue, unlimited: asyncio.Event,
-                       of, client, retry429, pause429):
+async def consume_urls(executor,
+                       inqueue: asyncio.Queue, of, client, retry429, pause429):
     loop = asyncio.get_event_loop()
+    unlimited = asyncio.Event()
+    unlimited.set()
+
+
+
     while True:
         url_data = await inqueue.get()
 
@@ -114,39 +110,43 @@ async def consume_urls(executor, inqueue: asyncio.Queue, unlimited: asyncio.Even
         if pause429:
             await unlimited.wait()
 
-        future = loop.run_in_executor(executor, get_page, client, url_data)
-        await future
+        await loop.run_in_executor(executor, get_page, client, url_data)
+
         result = url_data.result
 
-        if isinstance(result, RateLimitError):
+        if isinstance(result, APIError):
+            if result.status_code() == 429:
 
-            if pause429:
-                unlimited.clear()
-                await asyncio.sleep(result.retry_after())
-                unlimited.set()
+                if pause429:
+                    unlimited.clear()
+                    await asyncio.sleep(result.retry_after())
+                    unlimited.set()
 
-            if retry429:
-                await inqueue.put(url_data)
-            else:
-                await write_result(url_data, of)
+                if retry429:
+                    await inqueue.put(url_data)
+                    continue
 
-        elif isinstance(result, KeyboardInterrupt):
+        elif isinstance(result, OverQuotaError):
+            # no point in continuing if we're over quota
+            break
+
+        elif isinstance(result, Exception):
             raise
-        else:
-            if isinstance(result, OverQuotaError):
-                # no point in continuing if we're over quota
-                break
 
-            await write_result(url_data, of)
+        await url_data.write_json(of)
 
 
 def url_line(lineno, line):
+    '''create UrlData from `line`
+    '''
     return UrlData(line, lineno)
 
 
 def queued_json_lines(lineno, line):
-    json_string = line.strip()
-    json_data = json.loads(json_string)
+    '''parse `line` as json. If the resulting dictionary has a status of "queued"
+    produce UrlData from the result, otherwise None
+    '''
+    json_data = json.loads(line)
     result = json_data.get('result')
     if result:
         # result can be a string for error - should fix that
@@ -159,8 +159,16 @@ def queued_json_lines(lineno, line):
     return None
 
 
-async def produce_urls(queue: asyncio.Queue, urlfile, pbar,
-                       line_processor=url_line):
+async def produce_urls(queue: asyncio.Queue, urlfile,
+                       line_processor=url_line, report_progress=True):
+    '''call `line_processor` on each line of `urlfile`; put the result on `queue`
+       if it tests True.  If `report_progress` tests True, print a graphical
+       progress bar.
+
+    '''
+    if report_progress:
+        lines = line_count(urlfile)
+        pbar = tqdm.tqdm(total=lines)
 
     with open(urlfile) as f:
         for i, line in enumerate(f):
@@ -169,8 +177,12 @@ async def produce_urls(queue: asyncio.Queue, urlfile, pbar,
                 # don't want to copy the whole file to the queue, since it
                 # could be large, the queue has a limited size
                 await queue.put(il)
-            pbar.update(1)
+            if report_progress:
+                pbar.update(1)
+
     await queue.put(END_OF_INPUT)
+    if report_progress:
+        pbar.close()
 
 
 def run(urlfile, key: str, lineproc,
@@ -182,28 +194,21 @@ def run(urlfile, key: str, lineproc,
     inqueue = asyncio.Queue(count*3)
     client = SignalClient(key)
     loop = asyncio.get_event_loop()
-    lines = line_count(urlfile)
-    pbar = tqdm.tqdm(total=lines)
-    limit = asyncio.Event()
-    limit.set()  # is this the state on creation?
-    with open(outfile, 'w') as of:
-        with concurrent.futures.ThreadPoolExecutor(count) as executor:
+    with concurrent.futures.ThreadPoolExecutor(count) as executor:
+        with open(outfile, 'w') as of:
             # we could make the writing the results via coroutines, but the
             # time taken for that is likely to be small compared to the api
             # calls, so probably doesn't make much different. Possibly if
             # output file is on a network drive...
             loop.run_until_complete(
                 asyncio.gather(
-                    produce_urls(inqueue, urlfile, pbar, line_processor),
-                    *(consume_urls(executor, inqueue, limit, of, client, retry429, pause429)
+                    produce_urls(inqueue, urlfile, line_processor),
+                    *(consume_urls(executor, inqueue, of, client, retry429, pause429)
                       for i in range(count))
                 ))
 
-    pbar.close()
-
 
 def main():
-    # logging.basicConfig(level=logging.INFO)
     parser = argparse.ArgumentParser(
         description='Make multiple requests to the Grapeshot OpenAPI server.'
     )
@@ -215,8 +220,8 @@ def main():
                         default="")
 
     # at some point more consumers will not help, but if there's a lot of idle
-    # waiting for repsonses it may do. Note that in any case we can't make more
-    # requests that the server's rate limiting strategy allows.
+    # waiting for repsonses it may do. In any case we can't make faster
+    # requests than server side rate limiting allows.
     parser.add_argument("--consumers",
                         help="number of url consumers",
                         default=10,
@@ -237,7 +242,7 @@ def main():
 
     parser.add_argument(
         "--lineparse",
-        help='strategy used to parse input lines. Either "urlline" or "queued"',
+        help='strategy used to parse input lines. "urlline" or "queued"',
         default='urlline')
 
     parser.add_argument("--pause429",

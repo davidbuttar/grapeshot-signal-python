@@ -6,7 +6,7 @@ except ImportError:  # pragma: no cover
     from urlparse import urljoin, urlunparse  # pragma: no cover
 import grapeshot_signal.config as config
 from .model import SignalModel, SignalStatus
-from .errors import APIError, OverQuotaError, RateLimitError
+from .errors import APIError, OverQuotaError
 
 
 class SignalClient(object):
@@ -35,7 +35,6 @@ class SignalClient(object):
         self.base_url = urlunparse(('https', config.api_host, '',
                                     None, None, None))
 
-        print(self.base_url)
         self._session = requests.Session() if session else None
         self._make_call = self._session.get if session else requests.get
 
@@ -98,9 +97,6 @@ class SignalClient(object):
                 raise OverQuotaError(data)
 
             return SignalModel(data)
-
-        elif response.status_code == 429:
-            raise RateLimitError(response)
 
         else:
             try:
