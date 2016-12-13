@@ -7,6 +7,7 @@ import concurrent
 import functools
 import collections
 import os
+import sys
 import time
 from grapeshot_signal import SignalClient, SignalModel, rels,\
     APIError, OverQuotaError, config
@@ -98,8 +99,6 @@ async def consume_urls(executor,
     unlimited = asyncio.Event()
     unlimited.set()
 
-
-
     while True:
         url_data = await inqueue.get()
 
@@ -170,7 +169,7 @@ async def produce_urls(queue: asyncio.Queue, urlfile,
         lines = line_count(urlfile)
         pbar = tqdm.tqdm(total=lines)
 
-    with open(urlfile) as f:
+    with urlfile as f:
         for i, line in enumerate(f):
             il = line_processor(i, line.strip())
             if il:
@@ -195,17 +194,16 @@ def run(urlfile, key: str, lineproc,
     client = SignalClient(key)
     loop = asyncio.get_event_loop()
     with concurrent.futures.ThreadPoolExecutor(count) as executor:
-        with open(outfile, 'w') as of:
-            # we could make the writing the results via coroutines, but the
-            # time taken for that is likely to be small compared to the api
-            # calls, so probably doesn't make much different. Possibly if
-            # output file is on a network drive...
-            loop.run_until_complete(
-                asyncio.gather(
-                    produce_urls(inqueue, urlfile, line_processor),
-                    *(consume_urls(executor, inqueue, of, client, retry429, pause429)
-                      for i in range(count))
-                ))
+        # we could make the writing the results via coroutines, but the
+        # time taken for that is likely to be small compared to the api
+        # calls, so probably doesn't make much different. Possibly if
+        # output file is on a network drive...
+        loop.run_until_complete(
+            asyncio.gather(
+                produce_urls(inqueue, urlfile, line_processor),
+                *(consume_urls(executor, inqueue, outfile, client, retry429, pause429)
+                  for i in range(count))
+            ))
 
 
 def main():
@@ -213,8 +211,14 @@ def main():
         description='Make multiple requests to the Grapeshot OpenAPI server.'
     )
 
-    parser.add_argument("infile", nargs="?",
-                        help="file containing one url per line")
+    parser.add_argument("--infile", nargs="?",
+                        help="file containing one url per line, defaults to stdin",
+                        type=argparse.FileType('r'), default=sys.stdin)
+
+    parser.add_argument("--outfile", nargs="?",
+                        help="file containing results, defaults to stdout",
+                        type=argparse.FileType('w'),
+                        default=sys.stdout)
 
     parser.add_argument("--apikey", help="api key for the api server",
                         default="")
@@ -224,33 +228,30 @@ def main():
     # requests than server side rate limiting allows.
     parser.add_argument("--consumers",
                         help="number of url consumers",
-                        default=10,
+                        default=35,
                         type=int)
-    parser.add_argument("--outfile",
-                        help="file containing results")
-    parser.add_argument("--errors-file",
-                        help="file containing errors")
+
+    parser.add_argument("--lineparse",
+                        help='strategy used to parse input lines. "urlline" or "queued"',
+                        default='urlline')
+
 
     parser.add_argument("--retry429",
                         help="retry rate limited requests",
                         dest="retry429",
                         action="store_true")
+
     parser.add_argument("--no-retry429",
-                        help="retry rate limited requests",
+                        help="do not retry rate limited requests",
                         dest="retry429",
                         action="store_false")
-
-    parser.add_argument(
-        "--lineparse",
-        help='strategy used to parse input lines. "urlline" or "queued"',
-        default='urlline')
 
     parser.add_argument("--pause429",
                         help="pause on 429",
                         dest="pause429",
                         action="store_true")
     parser.add_argument("--no-pause429",
-                        help="pause on 429",
+                        help="do not pause on 429, not recommended - just for testing",
                         dest="pause429",
                         action="store_false")
 

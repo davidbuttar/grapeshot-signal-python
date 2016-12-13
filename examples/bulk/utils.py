@@ -1,8 +1,8 @@
 import os
+import sys
 
-
-def line_count(fname):
-    '''returns the number of lines in file with name `fname`
+def _line_count(infile):
+    '''returns the number of lines in file `infile`
     '''
     # fastest pure python way I could find for big files, although calling "wc
     # -l" with subprocess.check_output is faster (but depends on wc being
@@ -10,10 +10,19 @@ def line_count(fname):
 
     size = 65536
     count = 0
-    with open(fname) as f:
-        while True:
-            b = f.read(size)
-            if not b:
-                break
-            count += b.count(os.linesep)
+    while True:
+        b = infile.read(size)
+        if not b:
+            break
+        count += b.count(os.linesep)
+    return count
+
+
+def line_count(infile):
+    # don't try to count the lines on stdin
+    if infile == sys.stdin:
+        return 0
+    pos = infile.tell()
+    count = _line_count(infile)
+    infile.seek(pos)
     return count
