@@ -8,7 +8,7 @@ import functools
 import collections
 import os
 import sys
-import time
+import datetime
 from grapeshot_signal import SignalClient, SignalModel, rels,\
     APIError, OverQuotaError, config
 import tqdm
@@ -25,7 +25,7 @@ class UrlData(dict):
         '''
          Args:
             url: read from input
-            client_id: client identified (not used but preserved)
+            client_id: client identifier
             try_count: number of times url has been tried
             result: result of the signal api call
             request_time: time stamp when the call was made (approx)
@@ -45,7 +45,7 @@ class UrlData(dict):
         if isinstance(self.result, Exception):
             if isinstance(self.result, APIError):
                 self.status_code = self.result.status_code()
-                self.result = str(self.result)
+                self.result = {"message": str(self.result)}
 
         elif isinstance(self.result, SignalModel):
 
@@ -81,14 +81,14 @@ END_OF_INPUT = None
 
 
 def get_page(client, url_data):
-    url_data.request_time = time.time()
+    url_data.request_time = datetime.datetime.utcnow().isoformat()
     url_data.try_count += 1
     try:
         page = client.get_page(url_data.url, [rels.segments])
     except Exception as e:
         # we catch all exceptions and deal with them
         page = e
-    url_data.response_time = time.time()
+    url_data.response_time = datetime.datetime.utcnow().isoformat()
     url_data.result = page
     return url_data
 
@@ -130,7 +130,7 @@ async def consume_urls(executor,
             break
 
         elif isinstance(result, Exception):
-            raise
+            raise result
 
         await url_data.write_json(of)
 
@@ -139,23 +139,6 @@ def url_line(lineno, line):
     '''create UrlData from `line`
     '''
     return UrlData(line, lineno)
-
-
-def queued_json_lines(lineno, line):
-    '''parse `line` as json. If the resulting dictionary has a status of "queued"
-    produce UrlData from the result, otherwise None
-    '''
-    json_data = json.loads(line)
-    result = json_data.get('result')
-    if result:
-        # result can be a string for error - should fix that
-        if isinstance(result, str):
-            return None
-        status = result.get('status')
-        if status == 'queued':
-            url = json_data['url']
-            return UrlData(url, lineno)
-    return None
 
 
 async def produce_urls(queue: asyncio.Queue, urlfile,
@@ -184,26 +167,26 @@ async def produce_urls(queue: asyncio.Queue, urlfile,
         pbar.close()
 
 
-def run(urlfile, key: str, lineproc,
-        count: int, outfile, retry429, pause429):
-    line_processor = {'urlline': url_line,
-                      'queued': queued_json_lines}[lineproc]
+def run(urlfile, key: str, count: int, outfile, retry429, pause429):
     if not key:
         key = config.api_key
+
+    # queue size is a guess.
     inqueue = asyncio.Queue(count*3)
+
     client = SignalClient(key)
     loop = asyncio.get_event_loop()
+
+    # Maybe more threads is better, but rate limiting will provide an upper
+    # bound on throughput in any case.
+
     with concurrent.futures.ThreadPoolExecutor(count) as executor:
-        # we could make the writing the results via coroutines, but the
-        # time taken for that is likely to be small compared to the api
-        # calls, so probably doesn't make much different. Possibly if
-        # output file is on a network drive...
-        loop.run_until_complete(
-            asyncio.gather(
-                produce_urls(inqueue, urlfile, line_processor),
-                *(consume_urls(executor, inqueue, outfile, client, retry429, pause429)
-                  for i in range(count))
-            ))
+        producer = produce_urls(inqueue, urlfile)
+        consumers = (consume_urls(
+            executor, inqueue, outfile, client, retry429, pause429)
+                     for i in range(count))
+
+        loop.run_until_complete(asyncio.gather(producer, *consumers))
 
 
 def main():
@@ -231,11 +214,6 @@ def main():
                         default=35,
                         type=int)
 
-    parser.add_argument("--lineparse",
-                        help='strategy used to parse input lines. "urlline" or "queued"',
-                        default='urlline')
-
-
     parser.add_argument("--retry429",
                         help="retry rate limited requests",
                         dest="retry429",
@@ -258,7 +236,7 @@ def main():
     parser.set_defaults(retry429=True, pause429=True)
 
     args = parser.parse_args()
-    run(args.infile, args.apikey, args.lineparse, args.consumers,
+    run(args.infile, args.apikey, args.consumers,
         args.outfile, args.retry429, args.retry429)
 
 
