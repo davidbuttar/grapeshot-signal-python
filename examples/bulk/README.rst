@@ -157,3 +157,10 @@ Arrange for a suitable elasticsearch/kibana cluster. For smallish data::
 Then use elastic.py to populate your index::
 
   $ ./elastic.py --infile=final.json
+
+
+Viewing data in Kibana
+======================
+
+The subdirectory saved-visualisations contains a couple of example kibana
+dashboards.
