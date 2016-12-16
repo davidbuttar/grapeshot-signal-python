@@ -164,3 +164,134 @@ Viewing data in Kibana
 
 The subdirectory saved-visualisations contains a couple of example kibana
 dashboards.
+
+
+Digression - nested objects
+===========================
+
+The default mapping mechanism for arrays containing objects in elasticsearch is
+to flatten the whole structure.
+
+Here is part of an example document::
+
+  {
+  "request_time": "2016-12-14T10:59:19.853802",
+  "try_count": 1,
+  "url": "http://www.rotoworld.com",
+  "client_id": 34,
+  "result": {
+    "language": "en",
+    "status": "ok",
+    "segments": [
+      {
+        "score": 37.674,
+        "name": "gs_sport",
+        "matchterms": [
+          "Football",
+          "NFL",
+          "NBA",
+          "Baseball",
+          "Basketball",
+          "GOLF",
+          "Hockey",
+          "NFL DRAFT",
+          "MLB",
+          "NHL",
+          "PGA",
+          "PREMIER LEAGUE",
+          "rebounds",
+          "49ers",
+          "birdies",
+          "Bruins",
+          "College Football",
+          "Europa League",
+          "final four",
+          "Orioles",
+          "Soccer",
+          "Utd",
+          "Yankees"
+        ]
+      },
+      {
+        "score": 8.094,
+        "name": "gs_event_euro_championship",
+        "matchterms": [
+          "Football",
+          "Ramos",
+          "Euro",
+          "Rose",
+          "Silva's"
+        ]
+      },
+
+      ...
+
+  ]
+  },
+  "response_time": "2016-12-14T10:59:20.701867"
+  }
+
+So, by default, elasticsearch will create document fields like::
+
+  results.segments.matchterms
+
+
+The trouble with this is we lose the relationship between the specific segment
+name and the associated keywords. There is no mechanism for determining that
+the matchterm "Euro" is part of the "gs_event_euro_championship" segment object
+within this document, but the matchterm "NFL" is not. So if we try to make an
+aggregation summarise keywords contributing to a segment e.g::
+
+  GET /_search
+  {
+    "query": {
+      "terms": { "client_id" : [34] }
+    },
+    "aggs": {
+      "segments": {
+        "terms": {
+          "field": "result.segments.name.keyword"
+        },
+        "aggs": {
+          "keywords": {
+            "terms": {
+              "field": "result.segments.matchterms.keyword"
+            }
+          }
+        }
+      }
+    }
+  }
+
+The output includes the fragment::
+
+   "buckets": [
+        {
+          "key": "gs_event_euro_championship",
+          "doc_count": 1,
+          "keywords": {
+            "doc_count_error_upper_bound": 0,
+            "sum_other_doc_count": 20,
+            "buckets": [
+              {
+                "key": "49ers",
+                "doc_count": 1
+              },
+              {
+                "key": "Baseball",
+                "doc_count": 1
+              },
+
+
+A naive interpretation is that the keyword "49ers" contributes to the segment
+"gs_event_euro_championship". We've artificially restricted to one document to
+illustrate the problem.
+
+The nested object mapping addresses this::
+
+
+
+
+
+
+See also https://www.elastic.co/guide/en/elasticsearch/reference/2.4/nested.html
