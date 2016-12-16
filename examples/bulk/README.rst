@@ -72,73 +72,125 @@ A file containing the final result from the two passes can be created::
   $ cat noq.json  url-data-2.json > final.json
 
 
-A couple of lines of output might look like this (pretty printed) ::
+To illustrate a couple of points we'll use two urls - the file
+./data/bbc-cycling-urls.txt contains just::
 
-  $ tail -n 2 final.json |jq .
-  {
+  http://www.bbc.co.uk/sport/cycling/37691574
+  http://www.bbc.co.uk/sport/wales/38289389
+
+We can process this::
+
+  $ ./bulk.py --infile=./data/bbc-cycling-urls.txt |tail -n 1 |jq .
+    {
     "try_count": 1,
-    "request_time": 1481636766.3704753,
-    "url": "http://www.mumsnet.com/talk/am_i_being_unreasonable/1953420-to-be-terrified-for-my-friend?pg=12",
-    "client_id": 4,
-    "response_time": 1481636767.1446118,
+    "request_time": "2016-12-16T15:40:36.305721",
+    "url": "http://www.bbc.co.uk/sport/cycling/37691574",
+    "response_time": "2016-12-16T15:40:37.161313",
     "result": {
+      "status": "ok",
       "segments": [
         {
-          "score": 32.366,
-          "name": "gs_law_misc",
+          "score": 49.549,
           "matchterms": [
-            "police"
-          ]
+            "Bradley Wiggins",
+            "Chris Froome",
+            "Sport",
+            "Chris Hoy",
+            "Team Sky",
+            "cycling's",
+            "Tour de France",
+            "Dave Brailsford",
+            "athletes",
+            "Giro d'Italia",
+            "Mark Cavendish",
+            "Olympic",
+            "Olympics",
+            "UCI"
+          ],
+          "name": "gs_sport"
         },
         {
-          "score": 30.748,
-          "name": "gs_law",
+          "score": 38.88,
           "matchterms": [
-            "police"
-          ]
+            "Bradley Wiggins",
+            "Chris Froome",
+            "Chris Hoy",
+            "Team Sky",
+            "cycling's",
+            "Tour de France",
+            "Dave Brailsford",
+            "Giro d'Italia",
+            "Mark Cavendish",
+            "UCI"
+          ],
+          "name": "gs_sport_cycling"
         },
         {
-          "score": 18.819,
-          "name": "gs_predicts_mothers_day",
+          "score": 28.863,
           "matchterms": [
-            "daughter"
-          ]
+            "Bradley Wiggins",
+            "Chris Froome",
+            "Chris Hoy",
+            "athletes",
+            "Mark Cavendish",
+            "Olympian",
+            "Olympic",
+            "Olympics",
+            "Rio Olympics"
+          ],
+          "name": "gs_event_olympics"
         },
         {
-          "score": 12.165,
-          "name": "gs_family_marriage",
+          "score": 15.167,
           "matchterms": [
-            "marriage"
-          ]
+            "allergies",
+            "treatment",
+            "asthma",
+            "doctor",
+            "health",
+            "medical",
+            "respiratory",
+            "symptoms",
+            "therapeutic"
+          ],
+          "name": "gs_health"
         },
         {
-          "score": 12.165,
-          "name": "gs_society",
+          "score": 11.643,
           "matchterms": [
-            "marriage"
-          ]
+            "treatment",
+            "doctor",
+            "health",
+            "medical",
+            "respiratory",
+            "symptoms",
+            "therapeutic"
+          ],
+          "name": "gs_health_misc"
+        },
+        {
+          "score": 8.246,
+          "matchterms": [
+            "Sport",
+            "Olympic",
+            "Olympics"
+          ],
+          "name": "gs_sport_misc"
+        },
+        {
+          "score": 4.451,
+          "matchterms": [
+            "steroid",
+            "banned substances"
+          ],
+          "name": "gv_drugs"
         }
       ],
-      "status": "ok",
       "language": "en"
-    }
-  }
-  {
-    "try_count": 1,
-    "request_time": 1481636766.3698153,
-    "url": "http://www.wattpad.com/18305337-no-love-tyga-love-story-filler",
-    "client_id": 2,
-    "response_time": 1481636768.404048,
-    "result": {
-      "status": "error",
-      "error_code": "gx_notfound"
-    }
+    },
+    "client_id": 0
   }
 
-
-The first of these is typical for a url that has been crawled and
-categorised. The second is an example of a url that returned 404 at the time
-our crawler attempted to visit it.
 
 summary.py
 ==========
@@ -289,7 +341,12 @@ illustrate the problem.
 
 The nested object mapping addresses this::
 
+  ...
+  "result.segments": {
+     "type": "nested",
+  }
 
+Now we can run a query that give
 
 
 
