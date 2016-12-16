@@ -13,10 +13,22 @@ URL_MAPPINGS = {
             },
             "response_time": {
                 "type": "date",
+            },
+            "result": {
+                "properties": {
+                    "segments": {
+                        "properties": {
+                            "matchterms": {
+                                "type": "nested",
+                                "include_in_parent": "true"
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
     }
-}
 
 
 
