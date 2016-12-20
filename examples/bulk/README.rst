@@ -196,15 +196,37 @@ summary.py
 ==========
 
 bulk.py produces json to facilitate ease of post-processing. summary.py
-illustrates computing some summary statistics from an output file.
+illustrates computing some summary data:
+
+  language summary
+    a dictionary mapping language keys to document counts
+
+  segment summary
+    a dictionary mapping segment names to document counts
+
+  categorisation status
+    summary a dictionary counting the number of documents
+    with each of the following properties
+
+    categorised_standard
+    categorised_error
+    categorised_safety
+    categorised_info
+
+  categorisation keywords
+    a dictionary mapping each category to a dictionary
+    counting each matchterm's occurence in that category.
 
 
 elastic.py
 ==========
 
+elastic.py illustrates populating an elastic search index using the output
+from bulk.py.
+
 Arrange for a suitable elasticsearch/kibana cluster. For smallish data::
 
-  $ docker run --rm  sebp/elk
+  $ docker run --rm -v elk-data:/var/lib/elasticsearch -p 9200:9200 -p 9300:9300 -p 5601:5601 sebp/elk
 
 Then use elastic.py to populate your index::
 
