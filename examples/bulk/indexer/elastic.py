@@ -16,7 +16,6 @@ URL_MAPPINGS = {
             },
             "result.segments": {
                 "type": "nested",
-                "include_in_parent": "true"
             }
         }
     }
@@ -27,7 +26,8 @@ URL_MAPPINGS = {
 def run(infile, elastic):
     es = pye.ElasticSearch(elastic)
     doc_type = 'urldata'
-    index_name = 'urls_{}'.format(datetime.datetime.utcnow().isoformat().lower())
+    index_name = 'urls_{}'.format(
+        datetime.datetime.utcnow().isoformat().lower())
     es.create_index(index_name)
     es.put_mapping(index_name, doc_type, URL_MAPPINGS)
     with infile as f:
