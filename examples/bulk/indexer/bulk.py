@@ -159,7 +159,7 @@ async def produce_urls(queue: asyncio.Queue, urlfile,
     await queue.put(END_OF_INPUT)
 
 
-def run(urlfile, key: str, count: int, outfile, retry429, pause429):
+def process_urls(urlfile, key: str, count: int, outfile, retry429, pause429):
     if not key:
         key = config.api_key
 
@@ -232,8 +232,8 @@ def process_command_line():
 
 def main():
     args = process_command_line()
-    run(args.infile, args.apikey, args.consumers,
-        args.outfile, args.retry429, args.retry429)
+    process_urls(args.infile, args.apikey, args.consumers,
+                 args.outfile, args.retry429, args.retry429)
 
 
 if __name__ == '__main__':
