@@ -11,7 +11,6 @@ import sys
 import datetime
 from grapeshot_signal import SignalClient, SignalModel, rels,\
     APIError, OverQuotaError, config
-import tqdm
 import json
 from utils import line_count
 
@@ -142,15 +141,12 @@ def url_line(lineno, line):
 
 
 async def produce_urls(queue: asyncio.Queue, urlfile,
-                       line_processor=url_line, report_progress=True):
+                       line_processor=url_line):
     '''call `line_processor` on each line of `urlfile`; put the result on `queue`
        if it tests True.  If `report_progress` tests True, print a graphical
        progress bar.
 
     '''
-    if report_progress:
-        lines = line_count(urlfile)
-        pbar = tqdm.tqdm(total=lines)
 
     with urlfile as f:
         for i, line in enumerate(f):
@@ -159,12 +155,8 @@ async def produce_urls(queue: asyncio.Queue, urlfile,
                 # don't want to copy the whole file to the queue, since it
                 # could be large, the queue has a limited size
                 await queue.put(il)
-            if report_progress:
-                pbar.update(1)
 
     await queue.put(END_OF_INPUT)
-    if report_progress:
-        pbar.close()
 
 
 def run(urlfile, key: str, count: int, outfile, retry429, pause429):
@@ -189,7 +181,7 @@ def run(urlfile, key: str, count: int, outfile, retry429, pause429):
         loop.run_until_complete(asyncio.gather(producer, *consumers))
 
 
-def process_command_line()
+def process_command_line():
     parser = argparse.ArgumentParser(
         description='Make multiple requests to the Grapeshot OpenAPI server.'
     )
