@@ -189,7 +189,7 @@ def run(urlfile, key: str, count: int, outfile, retry429, pause429):
         loop.run_until_complete(asyncio.gather(producer, *consumers))
 
 
-def main():
+def process_command_line()
     parser = argparse.ArgumentParser(
         description='Make multiple requests to the Grapeshot OpenAPI server.'
     )
@@ -235,7 +235,11 @@ def main():
 
     parser.set_defaults(retry429=True, pause429=True)
 
-    args = parser.parse_args()
+    return parser.parse_args()
+
+
+def main():
+    args = process_command_line()
     run(args.infile, args.apikey, args.consumers,
         args.outfile, args.retry429, args.retry429)
 
