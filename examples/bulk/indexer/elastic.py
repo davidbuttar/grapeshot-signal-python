@@ -22,7 +22,6 @@ URL_MAPPINGS = {
 }
 
 
-
 def run(infile, elastic):
     es = pye.ElasticSearch(elastic)
     doc_type = 'urldata'
