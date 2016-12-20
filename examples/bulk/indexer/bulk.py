@@ -12,6 +12,7 @@ import datetime
 from grapeshot_signal import SignalClient, SignalModel, rels,\
     APIError, OverQuotaError, config
 import json
+from urllib.parse import urlparse
 from utils import line_count
 
 
@@ -37,9 +38,21 @@ class UrlData(dict):
         self.request_time = request_time
         self.response_time = response_time
 
+    def _add_url_fields(self):
+        url_parts = urlparse(self.url)
+        self.url_parts = {
+            'scheme': url_parts.scheme,
+            'netloc': url_parts.netloc,
+            'path': url_parts.path,
+            'params': url_parts.params,
+            'fragment': url_parts.fragment
+            }
+
     def prepare(self):
         '''Destructively change self in preparation for json output.
         '''
+
+        self._add_url_fields()
 
         if isinstance(self.result, Exception):
             if isinstance(self.result, APIError):
