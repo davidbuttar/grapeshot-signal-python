@@ -104,7 +104,7 @@ class SignalClient(object):
             except ValueError:
                 data = {'message': 'Unknown server error'}
 
-            raise APIError(response.status_code, data)
+            raise APIError(response.status_code, data, response.headers)
 
     def get_page(self, url, embed=None):
         """

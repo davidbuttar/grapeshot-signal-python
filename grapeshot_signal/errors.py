@@ -14,12 +14,13 @@ class OverQuotaError(Exception):
 
 class APIError(Exception):
 
-    def __init__(self, code, data):
+    def __init__(self, code, data, headers):
         error = data.get('error', '')
         message = data.get('message', '')
         Exception.__init__(self, "{0} {1}: {2}".format(code, error, message))
         self._code = code
         self.data = data
+        self.headers = headers
 
     def __str__(self):
 
