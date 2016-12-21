@@ -16,6 +16,14 @@ URL_MAPPINGS = {
             },
             "result.segments": {
                 "type": "nested",
+                "properties": {
+                    "name": {
+                        "type": "keyword"
+                    },
+                    "matchterms": {
+                        "type": "keyword"
+                    },
+                }
             }
         }
     }
