@@ -52,12 +52,13 @@ class UrlData(dict):
         '''Destructively change self in preparation for json output.
         '''
 
-        self._add_url_fields()
+        # self._add_url_fields()
 
         if isinstance(self.result, Exception):
             if isinstance(self.result, APIError):
                 self.status_code = self.result.status_code()
-                self.result = {"message": str(self.result)}
+
+            self.result = {"message": str(self.result)}
 
         elif isinstance(self.result, SignalModel):
 
@@ -142,7 +143,7 @@ async def consume_urls(executor,
             break
 
         elif isinstance(result, Exception):
-            raise result
+            logger.warn(str(result))
 
         await url_data.write_json(of)
 
