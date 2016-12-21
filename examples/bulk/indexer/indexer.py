@@ -2,10 +2,10 @@
 import argparse
 import subprocess
 import time
+import logging
 
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
-
 
 class IndexingHandler(FileSystemEventHandler):
 
@@ -14,20 +14,26 @@ class IndexingHandler(FileSystemEventHandler):
         self.elastic = elastic
 
     def _do_indexing(self, urlfile):
-        print('got new urlfile: {}'.format(urlfile))
+        logging.debug('got new urlfile: {}'.format(urlfile))
         p1 = subprocess.Popen(['./bulk.py', '--infile', urlfile],
                               stdout=subprocess.PIPE)
         p2 = subprocess.Popen(['./elastic.py', '--elastic', self.elastic],
                               stdin=p1.stdout)
         p2.communicate()
 
+    def _log_event(self, method_name, event):
+        logging.debug('on_created event: {}'.format(str(event)))
+
     def on_created(self, event):
+        self._log_event('on_created', event)
         self._do_indexing(event.src_path)
 
     def on_moved(self, event):
+        self._log_event('on_moved', event)
         self._do_indexing(event.dest_path)
 
     def on_modified(self, event):
+        self._log_event('on_modified', event)
         self._do_indexing(event.src_path)
 
 
@@ -54,6 +60,12 @@ if __name__ == '__main__':
         "--elastic", nargs="?",
         help="url for elastic, defaults to http://localhost:9200",
         default='http://localhost:9200')
-
+    parser.add_argument(
+        "--log", help="log level",
+        dest="logLevel",
+        choices=['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL']
+    )
     args = parser.parse_args()
+    if args.logLevel:
+        logging.basicConfig(level=getattr(logging, args.logLevel))
     run(args.watchdir, args.elastic)
