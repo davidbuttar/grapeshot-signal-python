@@ -10,12 +10,12 @@ node ('slave04 || slave05') {
 
        stage('Setup venv') {
 
-         sh '''PATH=$WORKSPACE/venv/bin:$PATH
+         sh '''PATH=${env.WORKSPACE}/venv/bin:${env.PATH}
                if [ ! -d "venv" ]; then
                      pyvenv venv
                fi
                . venv/bin/activate
-               pip install -r requirements.txt --download-cache=/tmp/$JOB_NAME
+               pip install -r requirements.txt --download-cache=/tmp/${env.JOB_NAME}
                '''
        }
 
