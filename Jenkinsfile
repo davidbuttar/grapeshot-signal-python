@@ -17,6 +17,6 @@ node ('slave04 || slave05') {
      }
 
      stage('Run tests') {
-       sh '''cd tests && python test_client.py'
+       sh 'cd tests && python test_client.py'
      }
 }
