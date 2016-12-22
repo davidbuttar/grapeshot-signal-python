@@ -6,14 +6,15 @@ node ('slave04 || slave05') {
         checkout scm
      }
 
+     def workspace = pwd()
 
      stage('Setup venv') {
        def exists = fileExists 'venv'
        if (!exists) {
-         sh "pyvenv venv"
+         sh "pyvenv ${workspace}/venv"
        }
        sh """
-          . venv/bin/activate
+          . ${workspace}/venv/bin/activate
           pip install -r requirements.txt --download-cache=/tmp/${env.JOB_NAME}
           """
      }
