@@ -21,7 +21,7 @@ node ('slave04 || slave05') {
        // requirements might change
        sh """
           source ${workspace}/venv/bin/activate
-          pip install -r requirements.txt --upgrade --download-cache=/tmp/${env.JOB_NAME}
+          pip install -r requirements.txt --upgrade
           """
      }
 
