@@ -11,7 +11,7 @@ node ('slave04 || slave05') {
      stage('Setup venv') {
        def exists = fileExists 'venv'
        if (!exists) {
-         sh """pyvenv-3.5 --without-pip ${workspace}/venv
+         sh """pyvenv-3.4 --without-pip ${workspace}/venv
                source ${workspace}/venv/bin/activate
                curl https://bootstrap.pypa.io/get-pip.py | python
                deactivate
