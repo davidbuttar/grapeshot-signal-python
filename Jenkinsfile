@@ -6,7 +6,7 @@ node ('slave04 || slave05') {
         checkout scm
      }
 
-     withEnv(["WORKSPACE=${pwd()}']) {
+     withEnv(["WORKSPACE=${pwd()}"]) {
 
        stage('Setup venv') {
 
