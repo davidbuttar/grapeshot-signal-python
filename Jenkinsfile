@@ -32,7 +32,7 @@ node ('slave04 || slave05') {
        sh """
           cd ${workspace}
           source ${venv}/bin/activate
-          cd tests && python test_client.py
+          python tests/test_client.py
           """
      }
 }
