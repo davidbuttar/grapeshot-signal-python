@@ -29,7 +29,7 @@ setup(
     # Versions should comply with PEP440.  For a discussion on single-sourcing
     # the version across setup.py and the project code, see
     # https://packaging.python.org/en/latest/single_source_version.html
-    # https://www.python.org/dev/peps/pep-0440/#public-version-identifiers    
+    # https://www.python.org/dev/peps/pep-0440/#public-version-identifiers
 
     version=version,
 
@@ -97,7 +97,7 @@ setup(
     # $ pip install -e .[dev,test]
     extras_require={
         'dev': ['check-manifest'],
-        'test': ['coverage'],
+        'test': ['coverage', 'httmock'],
     },
 
     # If there are data files included in your packages that need to be

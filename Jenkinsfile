@@ -23,7 +23,7 @@ node ('slave04 || slave05') {
        sh """
           source ${venv}/bin/activate
           cd ${workspace}
-          pip install . --upgrade
+          pip install -e .[test] --upgrade
           """
      }
 
