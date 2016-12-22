@@ -8,7 +8,7 @@
     
     <title>grapeshot_signal package &#8212; Grapeshot Signal SDK 0.1 documentation</title>
     
-    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pyramid.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     
     <script type="text/javascript">
@@ -29,15 +29,31 @@
     <link rel="top" title="Grapeshot Signal SDK 0.1 documentation" href="index.html" />
     <link rel="up" title="grapeshot_signal" href="modules.html" />
     <link rel="prev" title="grapeshot_signal" href="modules.html" />
-   
-  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
-  
-  
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Neuton&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nobile:regular,italic,bold,bolditalic&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
+<!--[if lte IE 6]>
+<link rel="stylesheet" href="_static/ie6.css" type="text/css" media="screen" charset="utf-8" />
+<![endif]-->
 
   </head>
   <body role="document">
-  
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="modules.html" title="grapeshot_signal"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Grapeshot Signal SDK 0.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="modules.html" accesskey="U">grapeshot_signal</a> &#187;</li> 
+      </ul>
+    </div>  
 
     <div class="document">
       <div class="documentwrapper">
@@ -53,7 +69,7 @@
 <span id="grapeshot-signal-client-module"></span><h2>grapeshot_signal.client module<a class="headerlink" href="#module-grapeshot_signal.client" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="grapeshot_signal.client.SignalClient">
-<em class="property">class </em><code class="descname">SignalClient</code><span class="sig-paren">(</span><em>api_key</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/grapeshot_signal/client.html#SignalClient"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#grapeshot_signal.client.SignalClient" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descname">SignalClient</code><span class="sig-paren">(</span><em>api_key</em>, <em>session=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/grapeshot_signal/client.html#SignalClient"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#grapeshot_signal.client.SignalClient" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>A wrapper for the Signal web API.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -154,7 +170,7 @@ response. See values in rels.py.</li>
 <span id="grapeshot-signal-errors-module"></span><h2>grapeshot_signal.errors module<a class="headerlink" href="#module-grapeshot_signal.errors" title="Permalink to this headline">¶</a></h2>
 <dl class="exception">
 <dt id="grapeshot_signal.errors.APIError">
-<em class="property">exception </em><code class="descname">APIError</code><span class="sig-paren">(</span><em>code</em>, <em>data</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/grapeshot_signal/errors.html#APIError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#grapeshot_signal.errors.APIError" title="Permalink to this definition">¶</a></dt>
+<em class="property">exception </em><code class="descname">APIError</code><span class="sig-paren">(</span><em>code</em>, <em>data</em>, <em>headers</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/grapeshot_signal/errors.html#APIError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#grapeshot_signal.errors.APIError" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">Exception</span></code></p>
 <dl class="method">
 <dt id="grapeshot_signal.errors.APIError.error">
@@ -304,23 +320,10 @@ See rels.py.</p>
 </ul>
 </li>
 </ul>
-<div class="relations">
-<h3>Related Topics</h3>
-<ul>
-  <li><a href="index.html">Documentation overview</a><ul>
-  <li><a href="modules.html">grapeshot_signal</a><ul>
-      <li>Previous: <a href="modules.html" title="previous chapter">grapeshot_signal</a></li>
-  </ul></li>
-  </ul></li>
-</ul>
-</div>
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="_sources/grapeshot_signal.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="modules.html"
+                        title="previous chapter">grapeshot_signal</a></p>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="search.html" method="get">
@@ -335,20 +338,25 @@ See rels.py.</p>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="footer">
-      &copy;2016, Grapeshot Limited.
-      
-      |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.8</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.9</a>
-      
-      |
-      <a href="_sources/grapeshot_signal.txt"
-          rel="nofollow">Page source</a>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="modules.html" title="grapeshot_signal"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Grapeshot Signal SDK 0.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="modules.html" >grapeshot_signal</a> &#187;</li> 
+      </ul>
     </div>
-
-    
-
-    
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2016, Grapeshot Limited.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.8.
+    </div>
   </body>
 </html>
