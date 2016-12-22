@@ -8,14 +8,16 @@ node ('slave04 || slave05') {
 
 
      stage('Setup venv') {
-
-       sh """if [ ! -d 'venv' ]; then
-                   pyvenv venv
-             fi
-             . venv/bin/activate
-             pip install -r requirements.txt --download-cache=/tmp/${env.JOB_NAME}
+       def exists = fileExists 'venv'
+       if (!exists) {
+         sh "pyvenv venv"
+       }
+       sh """
+          . venv/bin/activate
+          pip install -r requirements.txt --download-cache=/tmp/${env.JOB_NAME}
           """
      }
+
 
      stage('Run tests') {
        sh """
