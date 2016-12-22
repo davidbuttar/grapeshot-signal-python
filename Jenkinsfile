@@ -22,13 +22,15 @@ node ('slave04 || slave05') {
        // requirements might change
        sh """
           source ${venv}/bin/activate
-          pip install -r requirements.txt --upgrade
+          cd ${workspace}
+          pip install . --upgrade
           """
      }
 
 
      stage('Run tests') {
        sh """
+          cd ${workspace}
           source ${venv}/bin/activate
           cd tests && python test_client.py
           """
