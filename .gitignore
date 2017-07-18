@@ -55,6 +55,10 @@ target/
 
 # virtuenenv
 venv
+bin/
+lib64
+pip-selfcheck.json
+pyvenv.cfg
 
 # Emacs backups
 *~
