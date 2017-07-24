@@ -14,6 +14,9 @@ def load_file(file):
 def page_mock(url, request):
     return load_file('page.json')
 
+@urlmatch(path="/v1/text")
+def text_mock(text, request):
+    return load_file('text.json')
 
 @urlmatch(path='/v1/pages',
           query=r'.*((embed=keywords.*)?(embed=segments.*)?(url=.+))+')

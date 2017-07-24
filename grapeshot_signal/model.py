@@ -39,7 +39,16 @@ class SignalModel(dict):
         return self['status'] == SignalStatus.over_quota
 
     def url(self):
-        return self.get('url')
+        """
+        Returns the url of a pages endpoint call or None for a text endpoint call
+        """
+        return self.get('url', None)
+
+    def text(self):
+        """
+        Returns the text of a text endpoint call or None for a pages endpoint call
+        """
+        return self.get('text', None)
 
     def get_link_href(self, link_relation):
         """

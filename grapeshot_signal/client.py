@@ -1,11 +1,12 @@
-import requests
 import platform
+
+import requests
 try:
     from urllib.parse import urljoin, urlunparse
 except ImportError:  # pragma: no cover
     from urlparse import urljoin, urlunparse  # pragma: no cover
 import grapeshot_signal.config as config
-from .model import SignalModel, SignalStatus
+from .model import SignalModel, SignalModel, SignalStatus
 from .errors import APIError, OverQuotaError
 
 
@@ -132,6 +133,92 @@ class SignalClient(object):
 
         return self._get('pages', params)
 
+    def _post(self, path=None, params=None, post_data=None, is_full_path=False):
+        """
+        Private
+        Perform a POST request with headers.
+
+        Args:
+            path (str): API path (partial or full)
+            params (dict): Query params dict
+            post_data (dict): Post data for request
+            is_full_path (boolean): if false, path is appended
+                                    to api version prefix.
+
+        Returns:
+            text_model (SignalModel): model/JSON dict.
+
+        Raises:
+            APIError
+            OverQuotaError
+            requests.exceptions.ConnectionError
+        """
+        headers = self._get_headers()
+        headers["Content-Type"] = "application/json"
+
+        if is_full_path:
+            base_url = self.base_url
+        else:
+            base_url = urljoin(self.base_url, config.api_version)
+
+        api_url = urljoin(base_url, path)
+
+        response = requests.post(api_url, json=post_data, params=params, headers=headers)
+
+        if 200 <= response.status_code < 299:
+
+            data = response.json()
+
+            if (config.raise_over_quota and
+                    data['status'] == SignalStatus.over_quota):
+                raise OverQuotaError(data)
+
+            return SignalModel(data)
+        else:
+            try:
+                data = response.json()
+            except ValueError:
+                data = {'message': 'Unknown server error'}
+
+            raise APIError(response.status_code, data)
+
+    def get_text(self, text, embed=None):
+        """
+        Get analysis for text (GET /v1/text).
+
+        Example:
+            Get the segments for a webpage::
+
+                model = client.get_text('This is some sample text.', rels.segments)
+
+            Then access the embedded segments::
+
+                utils.get_embedded(model, rels.segments)
+
+        Args:
+            text (str): Text to analyze.
+            embed (list of str or str): Entity relations to embed in
+                               response. See values in rels.py.
+
+        Returns:
+            text_model (SignalModel): model/JSON dict.
+
+        Raises:
+            APIError
+            OverQuotaError
+            requests.exceptions.ConnectionError
+        """
+        post_data = {
+            "text": text
+        }
+
+        params = None
+        if embed is not None:
+            params = dict()
+            params['embed'] = embed
+
+        return self._post('text', params, post_data)
+
     def get_link(self, model, link_rel):
         """
         Gets the data for a link relation in a model.
@@ -139,14 +226,14 @@ class SignalClient(object):
         Example:
             Get the keywords for the a page::
 
-                keywords_model = client.get_link(page_model, rels.keywords)
+                keywords_model = client.get_link(signal_model, rels.keywords)
 
         Args:
             model (dict): a model returned from a previous API call.
             link_rel (str): a link relation, see rels.py.
 
         Returns:
-            page_model (SignalModel): model/JSON dict.
+            signal_model (SignalModel): model/JSON dict.
 
         Raises:
             APIError
