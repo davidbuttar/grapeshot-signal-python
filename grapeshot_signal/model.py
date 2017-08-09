@@ -1,4 +1,3 @@
-from collections import namedtuple
 import grapeshot_signal.config as config
 from .errors import OverQuotaError
 

@@ -6,7 +6,7 @@ try:
 except ImportError:  # pragma: no cover
     from urlparse import urljoin, urlunparse  # pragma: no cover
 import grapeshot_signal.config as config
-from .model import SignalModel, SignalModel, SignalStatus
+from .model import SignalModel, SignalStatus
 from .errors import APIError, OverQuotaError
 
 
@@ -38,6 +38,33 @@ class SignalClient(object):
         # development efforts.
         self.user_agent = (config.sdk_name + '/' + config.sdk_version + '/' +
                            platform.python_version())
+
+    @staticmethod
+    def _parse_response(response):
+        if 200 <= response.status_code < 299:
+
+            data = response.json()
+
+            if (config.raise_over_quota and
+                    data['status'] == SignalStatus.over_quota):
+                raise OverQuotaError(data)
+
+            return SignalModel(data)
+        else:
+            try:
+                data = response.json()
+            except ValueError:
+                data = {'message': 'Unknown server error'}
+
+            raise APIError(response.status_code, data)
+
+    def _get_api_url(self, path=None, is_full_path=False):
+        if is_full_path:
+            base_url = self.base_url
+        else:
+            base_url = urljoin(self.base_url, config.api_version)
+
+        return urljoin(base_url, path)
 
     def _get_headers(self):
         """Create a dictionary for headers needed to make a request.
@@ -72,31 +99,40 @@ class SignalClient(object):
         """
         headers = self._get_headers()
 
-        if is_full_path:
-            base_url = self.base_url
-        else:
-            base_url = urljoin(self.base_url, config.api_version)
-
-        api_url = urljoin(base_url, path)
+        api_url = self._get_api_url(path, is_full_path)
 
         response = requests.get(api_url, params=params, headers=headers)
 
-        if 200 <= response.status_code < 299:
+        return SignalClient._parse_response(response)
 
-            data = response.json()
+    def _post(self, path=None, params=None, post_data=None, is_full_path=False):
+        """
+        Private
+        Perform a POST request with headers.
 
-            if (config.raise_over_quota and
-                    data['status'] == SignalStatus.over_quota):
-                raise OverQuotaError(data)
+        Args:
+            path (str): API path (partial or full)
+            params (dict): Query params dict
+            post_data (dict): Post data for request
+            is_full_path (boolean): if false, path is appended
+                                    to api version prefix.
 
-            return SignalModel(data)
-        else:
-            try:
-                data = response.json()
-            except ValueError:
-                data = {'message': 'Unknown server error'}
+        Returns:
+            text_model (SignalModel): model/JSON dict.
 
-            raise APIError(response.status_code, data)
+        Raises:
+            APIError
+            OverQuotaError
+            requests.exceptions.ConnectionError
+        """
+        headers = self._get_headers()
+        headers["Content-Type"] = "application/json"
+
+        api_url = self._get_api_url(path, is_full_path)
+
+        response = requests.post(api_url, json=post_data, params=params, headers=headers)
+
+        return SignalClient._parse_response(response)
 
     def get_page(self, url, embed=None):
         """
@@ -132,55 +168,6 @@ class SignalClient(object):
             params['embed'] = embed
 
         return self._get('pages', params)
-
-    def _post(self, path=None, params=None, post_data=None, is_full_path=False):
-        """
-        Private
-        Perform a POST request with headers.
-
-        Args:
-            path (str): API path (partial or full)
-            params (dict): Query params dict
-            post_data (dict): Post data for request
-            is_full_path (boolean): if false, path is appended
-                                    to api version prefix.
-
-        Returns:
-            text_model (SignalModel): model/JSON dict.
-
-        Raises:
-            APIError
-            OverQuotaError
-            requests.exceptions.ConnectionError
-        """
-        headers = self._get_headers()
-        headers["Content-Type"] = "application/json"
-
-        if is_full_path:
-            base_url = self.base_url
-        else:
-            base_url = urljoin(self.base_url, config.api_version)
-
-        api_url = urljoin(base_url, path)
-
-        response = requests.post(api_url, json=post_data, params=params, headers=headers)
-
-        if 200 <= response.status_code < 299:
-
-            data = response.json()
-
-            if (config.raise_over_quota and
-                    data['status'] == SignalStatus.over_quota):
-                raise OverQuotaError(data)
-
-            return SignalModel(data)
-        else:
-            try:
-                data = response.json()
-            except ValueError:
-                data = {'message': 'Unknown server error'}
-
-            raise APIError(response.status_code, data)
 
     def get_text(self, text, embed=None):
         """
